@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="16dp"
+              tools:context=".MeetingDetailActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textStyle="bold"
+            android:paddingTop="8dp"
+            android:paddingBottom="4dp"
+            android:textSize="20sp"
+            android:id="@+id/activity_meeting_detail_title"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textStyle="bold"
+            android:paddingTop="4dp"
+            android:paddingBottom="8dp"
+            android:textSize="@dimen/header_text_size"
+            android:id="@+id/activity_meeting_detail_organizer"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/activity_meeting_detail_event_date"
+                android:textSize="15sp"
+                />
+
+            <TextView
+                android:layout_marginTop="8dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:lines="4"
+                android:id="@+id/activity_meeting_detail_description"
+                />
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rate_button"
+                android:text="@string/rate_button_txt"
+                android:layout_margin="0dp"
+                android:layout_gravity="center"
+                />
+
+            <TextView
+                android:id="@+id/event_existing_rating"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:gravity="start"
+                />
+
+            <LinearLayout
+                android:id="@+id/rating_area"
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/ratings_text"
+                    android:textStyle="bold"
+                    android:paddingTop="16dp"
+                    android:paddingBottom="8dp"
+                    android:textSize="16sp"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/activity_meeting_detail_rating_header"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="center"
+                        android:text="@string/rating_label"
+                        android:textStyle="bold"
+                        />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:text="@string/comments_text"
+                        />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/activity_meeting_detail_rating_none"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="start"
+                        android:text="@string/no_ratings_text"
+                        />
+                </LinearLayout>
+
+                <android.support.v4.widget.SwipeRefreshLayout
+                    android:id="@+id/activity_meeting_detail_swipe_refresh_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    >
+
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/activity_meeting_detail_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        />
+                </android.support.v4.widget.SwipeRefreshLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
+
+<!-- *********************************************************
+
+     O365-Android-MeetingFeedback, https://github.com/OfficeDev/O365-Android-MeetingFeedback
+
+     Copyright (c) Microsoft Corporation
+     All rights reserved.
+
+     MIT License:
+     Permission is hereby granted, free of charge, to any person obtaining
+     a copy of this software and associated documentation files (the
+     "Software"), to deal in the Software without restriction, including
+     without limitation the rights to use, copy, modify, merge, publish,
+     distribute, sublicense, and/or sell copies of the Software, and to
+     permit persons to whom the Software is furnished to do so, subject to
+     the following conditions:
+
+     The above copyright notice and this permission notice shall be
+     included in all copies or substantial portions of the Software.
+
+     THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+     MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+     LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+     OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+     ********************************************************* -->

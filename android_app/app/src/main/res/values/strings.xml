@@ -1,0 +1,88 @@
+<!-- Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file. -->
+<resources>
+    <string name="app_name">Meeting Feedback</string>
+    <string name="action_settings">Settings</string>
+
+    <!-- Regular UI text -->
+    <string name="connect_button_text">Try again</string>
+    <string name="disconnect_menu_item_text">Disconnect</string>
+    <string name="description_text">\nYou\'re now connected to Office 365. Tap the mail icon below to send a message from your account using the Office 365 SDK.\n</string>
+    <string name="conclusion_text">\nCheck your inbox, you have a new message :)</string>
+
+    <!-- Toast successful messages -->
+    <string name="connect_toast_text">Connected to Office 365</string>
+    <string name="discover_toast_text">Found Office 365 mail service</string>
+    <string name="send_mail_toast_text">Mail sent</string>
+    <string name="disconnect_toast_text">Disconnected from Office 365</string>
+
+    <!-- TextView Error messages -->
+    <string name="title_text_error">Oops!</string>
+    <string name="connect_text_error">\nSorry, can\'t connect to Office 365.\nHint: Check logcat for details.</string>
+    <string name="discover_text_error">\nSorry, can\'t find the mail service.\nHint: Check logcat for details.</string>
+    <string name="sendmail_text_error">\nSorry, can\'t send the email.\nHint: Check logcat for details.</string>
+
+    <!-- Toast error messages -->
+    <string name="encryption_key_text_error">Error setting up encryption key\nCheck logcat for details</string>
+    <string name="connect_toast_text_error">Error connecting to Office 365\nCheck logcat for details</string>
+    <string name="discover_toast_text_error">Error finding mail service\nCheck logcat for details</string>
+    <string name="send_mail_toast_text_error">Error sending email\nCheck logcat for details</string>
+    <string name="warning_clientid_redirecturi_incorrect">The client ID or redirect URI is not valid. Enter a valid client ID and redirect URI in the Constants.java file and run again</string>
+    <string name="no_network_connection">No Network Connection found!\n
+        Please ensure your device has a wifi or cellular connection.</string>
+    <string name="calendar_events">Hang on a sec…</string>
+    <string name="fetchevents_failure">FetchEvents Failure</string>
+    <string name="events_exception">An exception occured while attempting to fetch the events.</string>
+    <string name="calendar_events_loading">Loading your calendar events!</string>
+    <string name="rate_button_txt">Rate</string>
+    <string name="low_score_label">awful</string>
+    <string name="high_score_label">interstellar!</string>
+    <string name="failure_title">Uh-oh</string>
+    <string name="loading_calendar_failed">Loading the calendar data failed!</string>
+    <string name="send_rating_failed_exception">An exception occurred while attempting to send your rating.</string>
+    <string name="submit_rating">Hang on a sec…</string>
+    <string name="submitting_rating_description">please wait while your rating is submitted!</string>
+    <string name="no_comment">No Comment.</string>
+    <string name="you_rated_it_label">You rated it:</string>
+    <string name="ratings_text">Ratings</string>
+    <string name="no_ratings_text">No Ratings Yet!</string>
+    <string name="comments_text">Comments</string>
+    <string name="rating_label">Rating</string>
+    <string name="meeting_details">Meeting Details</string>
+    <string name="avg_rating_label">Avg Rating:</string>
+    <string name="avg_rating_text" formatted="false">Avg Rating: %.1f, of %d %s received total.</string>
+
+    <string-array name="meeting_filter_spinner_options">
+        <item>My Meetings</item>
+        <item>Rate Meetings</item>
+    </string-array>
+
+</resources><!--icaluid-->
+
+    <!-- *********************************************************
+
+         O365-Android-MeetingFeedback, https://github.com/OfficeDev/O365-Android-MeetingFeedback
+
+         Copyright (c) Microsoft Corporation
+         All rights reserved.
+
+         MIT License:
+         Permission is hereby granted, free of charge, to any person obtaining
+         a copy of this software and associated documentation files (the
+         "Software"), to deal in the Software without restriction, including
+         without limitation the rights to use, copy, modify, merge, publish,
+         distribute, sublicense, and/or sell copies of the Software, and to
+         permit persons to whom the Software is furnished to do so, subject to
+         the following conditions:
+
+         The above copyright notice and this permission notice shall be
+         included in all copies or substantial portions of the Software.
+
+         THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+         EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+         MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+         NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+         LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+         OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+         WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+         ********************************************************* -->
