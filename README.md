@@ -1,6 +1,6 @@
 # Office 365 Meeting Feedback sample for Android
 
-[![Meeting Feedback sample for Android](/readme-images/O365-Android-MeetingFeedback-video_play_icon.png)](https://www.youtube.com/watch?v=3IQIDFrqhY4 "Click to see the sample in action")
+[![Meeting Feedback sample for Android](/readme-images/O365-Android-MeetingFeedback-video_play_icon.png)](http://youtu.be/VXdEtKIPxi8 "Click to see the sample in action")
 
 Meeting Feedback is an Android sample app built using the [Office 365 APIs](http://aka.ms/o365-android-connect-platformoverview). It allows users to provide anonymous feedback to the meetings that they attend. Meeting organizers can review the feedback to improve the quality of their meetings and make the best use of everyone's time. 
 
