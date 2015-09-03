@@ -10,12 +10,12 @@ script:
 notifications:
   slack:
     secure: vE4iTri5wQCY54QOdihjZsvsYHica0CuFrdUGVomjfud7OI4DtQb90rbL5O9s5oiiAUUNgnmRqa9UlDpdKgz/tc4qX1lFvS7zDo00p07xa9iPmF2pdNQeeQvHJmOcmv4udWNfdylwpWKHBvI20sl45DKG+KmQOgVEMQmry6uLD7uZNVFdnNqIWmfN5bM7WpzzRtzY2FJNud/V2Ljoe5/635gkV8y447GGszeju6ra0zk/lfmdyGjkrWe3agNr/hLRfL1vTtm5Tsu948qGENcu4X8BS83cduOTnZzo7ad2Mz3bAnaoTTPB9d9b6Xz/Hpnc1i/lvNZNaEOWi2FCGN88Q+fqpnsPUf2sLI3djsJ/diD8Bxtpx17kRs3J4tyV2n5yxfzXhWtf82gYK7khTo6uLDIwGuB05JoNTWNd8gy48NfoGxa+cnfDUR36pR3Ckv/DYuyG3cbI6ii7/qIWE0tx/oZ16R7gKKugJ+1LleskMmyRdU5yovcWxS6pZ25w/3NjUo4KOVxjobFR86ha3NZ6rwDfGXcQoeHjEpouHqMbzgonHEfwXse/EclikN5mUzqL/zMzQpkNrT5Q62Y9qwnt+TDIuBfHZ9Foir44NstOoMa2vPUFJGExBOVSo/YfTBwf78YESXE0IiFg5sc7WSP9hSiITqWdfhh9gvTdbHBGcg=
-        on_success: never
-        on_failure: always
-        on_start: never
+    on_success: never
+    on_failure: always
+    on_start: never
 
-      email:
-        recipients:
-        - jak@microsoft.com
-        on_success: never
-        on_failure: always
+  email:
+    recipients:
+    - jak@microsoft.com
+    on_success: never
+    on_failure: always
