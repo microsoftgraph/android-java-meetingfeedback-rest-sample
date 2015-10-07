@@ -25,7 +25,7 @@ public class CalendarClientManager {
     public static final String PARAMETER_START_DATE_TIME = "startdatetime";
     public static final String PARAMETER_END_DATE_TIME = "enddatetime";
     public static final String PARAM_START = "Start desc";
-    public static final String SELECT_CLAUSE = "Subject,Start,End,Organizer,Attendees,BodyPreview,isOrganizer";
+    public static final String SELECT_CLAUSE = "Subject,Start,End,Organizer,Attendees,BodyPreview,isOrganizer,iCalUID";
     public static final int MAX_NUMBER_OF_EVENTS = 200;
     private DataStore mDataStore;
     private OutlookClient mOutlookClient;
