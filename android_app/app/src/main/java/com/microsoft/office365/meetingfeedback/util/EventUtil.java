@@ -10,35 +10,9 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 public class EventUtil {
-
     public static String getEventOwner(Event event) {
         return event.getOrganizer().getEmailAddress().getAddress();
     }
-
-    public static String hashCode(Event event) {
-        String stringToHash = event.getSubject() +
-                event.getOrganizer().getEmailAddress().getAddress() +
-                event.getStart().getTime().toString() +
-                event.getEnd().getTime().toString();
-
-        MessageDigest m = null;
-        try {
-            m = MessageDigest.getInstance("MD5");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        m.reset();
-        m.update(stringToHash.getBytes());
-        byte[] digest = m.digest();
-        BigInteger bigInt = new BigInteger(1, digest);
-        String hashtext = bigInt.toString(16);
-        while (hashtext.length() < 32) {
-            hashtext = "0" + hashtext;
-        }
-        return hashtext;
-    }
-
-
 }
 
 // *********************************************************
