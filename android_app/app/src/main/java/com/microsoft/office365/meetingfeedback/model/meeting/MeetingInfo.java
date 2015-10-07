@@ -18,7 +18,7 @@ public class MeetingInfo implements Serializable {
     private final Calendar mEnd;
 
     public MeetingInfo(Event event) {
-        mId = EventUtil.hashCode(event);
+        mId = event.getiCalUId();
         mSubject = event.getSubject();
         mStart = event.getStart();
         mEnd = event.getEnd();

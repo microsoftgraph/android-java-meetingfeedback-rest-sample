@@ -55,15 +55,6 @@ public class RatingData implements Serializable {
         return mUsername.equals(that.mUsername);
 
     }
-
-    @Override
-    public int hashCode() {
-        int result = mEventId != null ? mEventId.hashCode() : 0;
-        result = 31 * result + (mRating != +0.0f ? Float.floatToIntBits(mRating) : 0);
-        result = 31 * result + (mReview != null ? mReview.hashCode() : 0);
-        result = 31 * result + (mUsername != null ? mUsername.hashCode() : 0);
-        return result;
-    }
 }
 
 // *********************************************************

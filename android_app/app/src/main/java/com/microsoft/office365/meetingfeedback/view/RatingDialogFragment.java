@@ -99,7 +99,7 @@ public class RatingDialogFragment extends BaseDialogFragment {
     }
 
     private RatingData buildRatingData() {
-        return new RatingData(EventUtil.hashCode(mEvent), mRatingBar.getRating(), mComments.getText().toString(), mUsername);
+        return new RatingData(mEvent.getiCalUId(), mRatingBar.getRating(), mComments.getText().toString(), mUsername);
     }
 
     private String buildEventTitle() {
