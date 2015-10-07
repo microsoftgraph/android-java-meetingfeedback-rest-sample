@@ -36,7 +36,7 @@ public class CalendarUtil {
             List<EventDecorator> eventDecorators = new ArrayList<>();
             for (Event event : events) {
                 if (dateRange.isWithinRange(event)) {
-                    eventDecorators.add(new EventDecorator(event, dataStore.getWebServiceRatingDataForEvent(EventUtil.hashCode(event))));
+                    eventDecorators.add(new EventDecorator(event, dataStore.getWebServiceRatingDataForEvent(event.getiCalUId())));
                 }
             }
             eventsGroupedByDateRanges.add(new EventGroup(i, dateRange, eventDecorators));

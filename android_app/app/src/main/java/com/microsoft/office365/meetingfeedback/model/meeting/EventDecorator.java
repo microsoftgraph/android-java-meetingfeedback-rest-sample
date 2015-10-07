@@ -31,7 +31,7 @@ public class EventDecorator implements Serializable {
     public final boolean mIsOrganizer;
 
     public EventDecorator(Event event, MeetingServiceResponseData serviceData) {
-        mEventId = EventUtil.hashCode(event);
+        mEventId = event.getiCalUId();
         mOrganizerName = event.getOrganizer().getEmailAddress().getName();
         mOrganizerAddress = event.getOrganizer().getEmailAddress().getAddress();
         mSubject = event.getSubject();

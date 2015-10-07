@@ -58,7 +58,7 @@ public class DataStore {
     public void setEvents(List<Event> events) {
         mEvents = events;
         for (Event event : events) {
-            mEventsMap.put(EventUtil.hashCode(event), event);
+            mEventsMap.put(event.getiCalUId(), event);
         }
     }
 

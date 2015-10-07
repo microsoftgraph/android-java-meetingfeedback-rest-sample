@@ -112,9 +112,8 @@ public class RatingServiceManager {
 
     }
 
-
     public void loadRatingFromWebservice(Event event) {
-        loadRatingFromWebservice(EventUtil.hashCode(event), EventUtil.getEventOwner(event));
+        loadRatingFromWebservice(event.getiCalUId(), EventUtil.getEventOwner(event));
     }
 }
 
