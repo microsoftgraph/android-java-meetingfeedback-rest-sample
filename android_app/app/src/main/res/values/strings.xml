@@ -31,7 +31,7 @@
         Please ensure your device has a wifi or cellular connection.</string>
     <string name="calendar_events">Hang on a sec…</string>
     <string name="fetchevents_failure">FetchEvents Failure</string>
-    <string name="events_exception">An exception occured while attempting to fetch the events.</string>
+    <string name="events_exception">An exception occurred while attempting to fetch the events.</string>
     <string name="calendar_events_loading">Loading your calendar events!</string>
     <string name="rate_button_txt">Rate</string>
     <string name="low_score_label">awful</string>
