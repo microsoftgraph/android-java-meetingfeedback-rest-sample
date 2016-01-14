@@ -1,5 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license. See full license at the bottom of this file. -->
+<!--
+   - Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
+   - See LICENSE in the project root for license information.
+  -->
 <resources>
     <item name="white" type="color">#ffffff</item>
     <item name="darkGrey" type="color">#363636</item>
