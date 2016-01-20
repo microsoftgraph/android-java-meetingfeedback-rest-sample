@@ -18,7 +18,7 @@ import com.microsoft.office365.meetingfeedback.model.Constants;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 import com.microsoft.office365.meetingfeedback.util.SharedPrefsUtil;
-import com.microsoft.services.odata.impl.ADALDependencyResolver;
+import com.microsoft.services.orc.resolvers.ADALDependencyResolver;
 
 import java.util.Map;
 

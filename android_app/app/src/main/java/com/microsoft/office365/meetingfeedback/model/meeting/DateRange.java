@@ -5,7 +5,7 @@
 package com.microsoft.office365.meetingfeedback.model.meeting;
 
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
-import com.microsoft.outlookservices.Event;
+import com.microsoft.services.outlook.Event;
 
 import java.io.Serializable;
 import java.util.Calendar;

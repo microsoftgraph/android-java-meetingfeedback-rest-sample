@@ -22,7 +22,7 @@ import com.microsoft.office365.meetingfeedback.event.SendRatingEvent;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.meeting.RatingData;
 import com.microsoft.office365.meetingfeedback.util.EventUtil;
-import com.microsoft.outlookservices.Event;
+import com.microsoft.services.outlook.Event;
 
 import javax.inject.Inject;
 
@@ -100,7 +100,7 @@ public class RatingDialogFragment extends BaseDialogFragment {
     }
 
     private RatingData buildRatingData() {
-        return new RatingData(mEvent.getiCalUId(), mRatingBar.getRating(), mComments.getText().toString(), mUsername);
+        return new RatingData(mEvent.getICalUId(), mRatingBar.getRating(), mComments.getText().toString(), mUsername);
     }
 
     private String buildEventTitle() {

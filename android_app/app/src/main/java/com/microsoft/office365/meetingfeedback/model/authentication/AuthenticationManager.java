@@ -15,7 +15,7 @@ import com.microsoft.office365.meetingfeedback.model.Constants;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.User;
 import com.microsoft.office365.meetingfeedback.model.service.RatingServiceAlarmManager;
-import com.microsoft.services.odata.impl.ADALDependencyResolver;
+import com.microsoft.services.orc.resolvers.ADALDependencyResolver;
 
 public class AuthenticationManager {
 

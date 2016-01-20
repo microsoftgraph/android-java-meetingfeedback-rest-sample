@@ -9,10 +9,10 @@ import android.util.Log;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
-import com.microsoft.discoveryservices.ServiceInfo;
-import com.microsoft.discoveryservices.odata.DiscoveryClient;
+import com.microsoft.services.discovery.ServiceInfo;
+import com.microsoft.services.discovery.fetchers.DiscoveryClient;
 import com.microsoft.office365.meetingfeedback.model.Constants;
-import com.microsoft.services.odata.interfaces.DependencyResolver;
+import com.microsoft.services.orc.core.DependencyResolver;
 
 import java.util.HashMap;
 import java.util.List;
@@ -32,7 +32,7 @@ public class ServiceDiscoveryManager {
         DiscoveryClient discoveryClient = new DiscoveryClient(Constants.DISCOVERY_RESOURCE_URL, mDependencyResolver);
         try {
             ListenableFuture<List<ServiceInfo>> services = discoveryClient
-                    .getservices()
+                    .getServices()
                     .select("serviceResourceId,serviceEndpointUri,capability")
                     .read();
             Futures.addCallback(services,
@@ -40,7 +40,7 @@ public class ServiceDiscoveryManager {
                         @Override
                         public void onSuccess(final List<ServiceInfo> result) {
                             for (ServiceInfo serviceInfo : result) {
-                                mServicesMap.put(serviceInfo.getcapability(), serviceInfo);
+                                mServicesMap.put(serviceInfo.getCapability(), serviceInfo);
                             }
                             Log.d(TAG, "Services Discovered. result = " + mServicesMap);
                             callback.onServiceDiscoverySuccess();

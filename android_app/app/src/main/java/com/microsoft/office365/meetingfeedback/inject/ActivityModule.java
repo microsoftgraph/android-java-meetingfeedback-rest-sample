@@ -17,7 +17,7 @@ import com.microsoft.office365.meetingfeedback.util.DialogUtil;
 import com.microsoft.office365.meetingfeedback.view.CalendarPageFragment;
 import com.microsoft.office365.meetingfeedback.view.CalendarRangeFragment;
 import com.microsoft.office365.meetingfeedback.view.RatingDialogFragment;
-import com.microsoft.services.odata.impl.ADALDependencyResolver;
+import com.microsoft.services.orc.resolvers.ADALDependencyResolver;
 
 import dagger.Module;
 import dagger.Provides;

@@ -9,7 +9,7 @@ import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingS
 import com.microsoft.office365.meetingfeedback.util.CalendarUtil;
 import com.microsoft.office365.meetingfeedback.util.EventUtil;
 import com.microsoft.office365.meetingfeedback.util.SharedPrefsUtil;
-import com.microsoft.outlookservices.Event;
+import com.microsoft.services.outlook.Event;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,7 +59,7 @@ public class DataStore {
     public void setEvents(List<Event> events) {
         mEvents = events;
         for (Event event : events) {
-            mEventsMap.put(event.getiCalUId(), event);
+            mEventsMap.put(event.getICalUId(), event);
         }
     }
 

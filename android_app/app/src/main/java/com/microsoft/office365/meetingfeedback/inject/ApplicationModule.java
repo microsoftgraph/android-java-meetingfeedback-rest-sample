@@ -17,7 +17,7 @@ import com.microsoft.office365.meetingfeedback.model.webservice.RatingService;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 import com.microsoft.office365.meetingfeedback.util.ConnectivityUtil;
 import com.microsoft.office365.meetingfeedback.util.SharedPrefsUtil;
-import com.microsoft.services.odata.impl.ADALDependencyResolver;
+import com.microsoft.services.orc.resolvers.ADALDependencyResolver;
 
 import javax.inject.Singleton;
 
