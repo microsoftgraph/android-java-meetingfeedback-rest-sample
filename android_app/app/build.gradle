@@ -33,7 +33,6 @@ dependencies {
     // choose the outlook, discovery, and file services
     compile 'com.microsoft.services:outlook-services:0.13.0'
     compile 'com.microsoft.services:discovery-services:0.13.0'
-    compile 'com.microsoft.services:file-services:0.13.0'
     //    // Azure Active directory Library
     compile 'com.microsoft.aad:adal:1.1.7'
 
