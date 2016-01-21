@@ -33,10 +33,10 @@ dependencies {
     compile 'com.microsoft.aad:adal:1.1.11'
 
     //dependency injection
-    compile 'com.squareup.dagger:dagger:1.2.1'
-    provided 'com.squareup.dagger:dagger-compiler:1.2.1'
+    compile 'com.squareup.dagger:dagger:1.2.2'
+    provided 'com.squareup.dagger:dagger-compiler:1.2.2'
     //eventbus
-    compile 'de.greenrobot:eventbus:2.4.0'
+    compile 'de.greenrobot:eventbus:2.4.1'
     //REST interface
     compile 'com.squareup.retrofit:retrofit:1.9.0'
 }
