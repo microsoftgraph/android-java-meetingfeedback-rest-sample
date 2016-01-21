@@ -11,8 +11,8 @@ import com.microsoft.office365.meetingfeedback.event.LoadCalendarFailedEvent;
 import com.microsoft.office365.meetingfeedback.event.LoadCalendarSuccessEvent;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.meeting.DateRange;
-import com.microsoft.outlookservices.Event;
-import com.microsoft.outlookservices.odata.OutlookClient;
+import com.microsoft.services.outlook.Event;
+import com.microsoft.services.outlook.fetchers.OutlookClient;
 
 import java.util.ArrayList;
 import java.util.Calendar;

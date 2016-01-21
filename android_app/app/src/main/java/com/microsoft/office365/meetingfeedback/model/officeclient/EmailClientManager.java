@@ -15,11 +15,11 @@ import com.microsoft.office365.meetingfeedback.model.meeting.RatingData;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 import com.microsoft.office365.meetingfeedback.util.EventUtil;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
-import com.microsoft.outlookservices.Event;
-import com.microsoft.outlookservices.ItemBody;
-import com.microsoft.outlookservices.Message;
-import com.microsoft.outlookservices.Recipient;
-import com.microsoft.outlookservices.odata.OutlookClient;
+import com.microsoft.services.outlook.Event;
+import com.microsoft.services.outlook.ItemBody;
+import com.microsoft.services.outlook.Message;
+import com.microsoft.services.outlook.Recipient;
+import com.microsoft.services.outlook.fetchers.OutlookClient;
 
 import java.util.Collections;
 

@@ -14,7 +14,7 @@ import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingS
 import com.microsoft.office365.meetingfeedback.util.EventUtil;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 import com.microsoft.office365.meetingfeedback.view.EventsRecyclerViewAdapter;
-import com.microsoft.outlookservices.Event;
+import com.microsoft.services.outlook.Event;
 
 import java.io.Serializable;
 import java.util.Locale;
@@ -32,7 +32,7 @@ public class EventDecorator implements Serializable {
     public final boolean mIsOrganizer;
 
     public EventDecorator(Event event, MeetingServiceResponseData serviceData) {
-        mEventId = event.getiCalUId();
+        mEventId = event.getICalUId();
         mOrganizerName = event.getOrganizer().getEmailAddress().getName();
         mOrganizerAddress = event.getOrganizer().getEmailAddress().getAddress();
         mSubject = event.getSubject();

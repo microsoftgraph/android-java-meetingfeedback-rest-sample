@@ -4,7 +4,7 @@
  */
 package com.microsoft.office365.meetingfeedback.model.meeting;
 
-import com.microsoft.outlookservices.Event;
+import com.microsoft.services.outlook.Event;
 
 import java.util.List;
 

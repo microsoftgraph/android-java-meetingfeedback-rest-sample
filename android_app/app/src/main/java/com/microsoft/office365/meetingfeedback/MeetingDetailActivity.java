@@ -27,7 +27,7 @@ import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingS
 import com.microsoft.office365.meetingfeedback.view.RatingDialogFragment;
 import com.microsoft.office365.meetingfeedback.view.RatingsRecyclerViewAdapter;
 import com.microsoft.office365.meetingfeedback.view.ShowRatingDialogEvent;
-import com.microsoft.outlookservices.Event;
+import com.microsoft.services.outlook.Event;
 
 import javax.inject.Inject;
 

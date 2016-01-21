@@ -4,7 +4,7 @@
  */
 package com.microsoft.office365.meetingfeedback.util;
 
-import com.microsoft.outlookservices.Event;
+import com.microsoft.services.outlook.Event;
 
 import java.math.BigInteger;
 import java.security.MessageDigest;

@@ -4,13 +4,13 @@
  */
 package com.microsoft.office365.meetingfeedback.model.officeclient;
 
-import com.microsoft.discoveryservices.ServiceInfo;
+import com.microsoft.services.discovery.ServiceInfo;
 import com.microsoft.office365.meetingfeedback.model.Constants;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.discovery.ServiceDiscoveryManager;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
-import com.microsoft.outlookservices.odata.OutlookClient;
-import com.microsoft.services.odata.impl.ADALDependencyResolver;
+import com.microsoft.services.outlook.fetchers.OutlookClient;
+import com.microsoft.services.orc.resolvers.ADALDependencyResolver;
 
 public class ClientManager {
 
@@ -34,14 +34,14 @@ public class ClientManager {
 
     private CalendarClientManager setupCalendarClientManager() {
         ServiceInfo serviceInfo = mServiceDiscoveryManager.getCalendarServiceInfo();
-        mResolver.setResourceId(serviceInfo.getserviceResourceId());
+        mResolver.setResourceId(serviceInfo.getServiceResourceId());
         OutlookClient outlookClient = new OutlookClient(Constants.ENDPOINT_ID, mResolver);
         return new CalendarClientManager(mDataStore, outlookClient);
     }
 
     private EmailClientManager setupMailClientManager() {
         ServiceInfo serviceInfo = mServiceDiscoveryManager.getMailServiceInfo();
-        mResolver.setResourceId(serviceInfo.getserviceResourceId());
+        mResolver.setResourceId(serviceInfo.getServiceResourceId());
         OutlookClient outlookClient = new OutlookClient(Constants.ENDPOINT_ID, mResolver);
         return new EmailClientManager(mDataStore, outlookClient, mRatingServiceManager);
     }

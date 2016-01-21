@@ -5,7 +5,7 @@
 package com.microsoft.office365.meetingfeedback.model.meeting;
 
 import com.microsoft.office365.meetingfeedback.util.EventUtil;
-import com.microsoft.outlookservices.Event;
+import com.microsoft.services.outlook.Event;
 
 import java.io.Serializable;
 import java.util.Calendar;
@@ -19,7 +19,7 @@ public class MeetingInfo implements Serializable {
     private final Calendar mEnd;
 
     public MeetingInfo(Event event) {
-        mId = event.getiCalUId();
+        mId = event.getICalUId();
         mSubject = event.getSubject();
         mStart = event.getStart();
         mEnd = event.getEnd();
