@@ -9,7 +9,6 @@ import com.microsoft.office365.meetingfeedback.MeetingFeedbackApplication;
 import com.microsoft.office365.meetingfeedback.model.Constants;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationContextBuilder;
-import com.microsoft.office365.meetingfeedback.model.discovery.ServiceDiscoveryManager;
 import com.microsoft.office365.meetingfeedback.model.officeclient.ClientManager;
 import com.microsoft.office365.meetingfeedback.model.service.MyMeetingsService;
 import com.microsoft.office365.meetingfeedback.model.service.RatingServiceAlarmManager;
@@ -36,13 +35,7 @@ public class ApplicationModule {
     @Provides
     @Singleton
     public ADALDependencyResolver providesADALDependencyResolver(AuthenticationContext authContext) {
-        return new ADALDependencyResolver(authContext, Constants.DISCOVERY_RESOURCE_ID, Constants.CLIENT_ID);
-    }
-
-    @Provides
-    @Singleton
-    public ServiceDiscoveryManager providesServiceDiscoveryManager(ADALDependencyResolver adalDependencyResolver) {
-        return new ServiceDiscoveryManager(adalDependencyResolver);
+        return new ADALDependencyResolver(authContext, Constants.OUTLOOK_RESOURCE_ID, Constants.CLIENT_ID);
     }
 
     @Provides
@@ -66,9 +59,8 @@ public class ApplicationModule {
     @Singleton
     public ClientManager providesClientManager(DataStore dataStore,
                                                ADALDependencyResolver resolver,
-                                               ServiceDiscoveryManager serviceDiscoveryManager,
                                                RatingServiceManager ratingServiceManager) {
-        return new ClientManager(dataStore, resolver, serviceDiscoveryManager, ratingServiceManager);
+        return new ClientManager(dataStore, resolver, ratingServiceManager);
     }
 
     @Provides

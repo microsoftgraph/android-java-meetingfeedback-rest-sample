@@ -11,7 +11,6 @@ import android.view.View;
 
 import com.microsoft.office365.meetingfeedback.R;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingServiceResponseData;
-import com.microsoft.office365.meetingfeedback.util.EventUtil;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 import com.microsoft.office365.meetingfeedback.view.EventsRecyclerViewAdapter;
 import com.microsoft.services.outlook.Event;

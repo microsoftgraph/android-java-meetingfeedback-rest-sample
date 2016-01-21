@@ -7,7 +7,6 @@ package com.microsoft.office365.meetingfeedback.model;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventGroup;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingServiceResponseData;
 import com.microsoft.office365.meetingfeedback.util.CalendarUtil;
-import com.microsoft.office365.meetingfeedback.util.EventUtil;
 import com.microsoft.office365.meetingfeedback.util.SharedPrefsUtil;
 import com.microsoft.services.outlook.Event;
 

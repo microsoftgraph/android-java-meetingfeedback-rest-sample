@@ -21,7 +21,6 @@ import com.microsoft.office365.meetingfeedback.R;
 import com.microsoft.office365.meetingfeedback.event.SendRatingEvent;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.meeting.RatingData;
-import com.microsoft.office365.meetingfeedback.util.EventUtil;
 import com.microsoft.services.outlook.Event;
 
 import javax.inject.Inject;

@@ -27,9 +27,8 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:23.1.1'
     compile 'com.android.support:recyclerview-v7:23.1.1'
-    // choose the outlook, discovery, and adal
+    // choose outlook and adal
     compile 'com.microsoft.services:outlook-services:1.0.0'
-    compile 'com.microsoft.services:discovery-services:1.0.0'
     compile 'com.microsoft.aad:adal:1.1.11'
 
     //dependency injection

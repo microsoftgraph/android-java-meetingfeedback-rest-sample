@@ -10,10 +10,7 @@ import com.microsoft.services.outlook.Recipient;
 
 public class Constants {
     public static final String AUTHORITY_URL = "https://login.microsoftonline.com/common";
-    public static final String DISCOVERY_RESOURCE_URL = "https://api.office.com/discovery/v1.0/me/";
-    public static final String DISCOVERY_RESOURCE_ID = "https://api.office.com/discovery/";
-    public static final String MAIL_CAPABILITY = "Mail";
-    public static final String CALENDAR_ID = "Calendar";
+    public static final String OUTLOOK_RESOURCE_ID = "https://outlook.office365.com/";
 
     // Update these constants with the values for your application:
     public static final String CLIENT_ID = "<YOUR_CLIENT_ID>";
