@@ -1,8 +1,6 @@
-sudo: false
 language: android
 android:
   components:
-  - tools
   - platform-tools
   - extra
   - android-23
