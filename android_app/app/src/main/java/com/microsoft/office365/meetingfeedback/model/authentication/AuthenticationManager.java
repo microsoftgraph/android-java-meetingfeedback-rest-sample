@@ -56,7 +56,7 @@ public class AuthenticationManager {
         };
 
         mAuthenticationContext.acquireToken(
-                Constants.DISCOVERY_RESOURCE_ID,
+                Constants.OUTLOOK_RESOURCE_ID,
                 Constants.CLIENT_ID,
                 Constants.REDIRECT_URI,
                 null,
@@ -71,7 +71,6 @@ public class AuthenticationManager {
         cookieManager.removeAllCookie();
         mAuthenticationContext.getCache().removeAll();
         mDataStore.logout();
-        mResolver.setResourceId(Constants.DISCOVERY_RESOURCE_ID);
         mAlarmManager.cancelRatingService();
     }
 

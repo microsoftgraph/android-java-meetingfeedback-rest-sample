@@ -6,10 +6,6 @@ package com.microsoft.office365.meetingfeedback.util;
 
 import com.microsoft.services.outlook.Event;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-
 public class EventUtil {
     public static String getEventOwner(Event event) {
         return event.getOrganizer().getEmailAddress().getAddress();

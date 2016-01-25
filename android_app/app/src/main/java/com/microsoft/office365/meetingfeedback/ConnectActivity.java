@@ -15,11 +15,6 @@ import android.widget.Toast;
 
 import com.microsoft.aad.adal.IWindowComponent;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationResultsCallback;
-import com.microsoft.office365.meetingfeedback.model.discovery.ServiceDiscoveryCallback;
-import com.microsoft.office365.meetingfeedback.model.discovery.ServiceDiscoveryManager;
-import com.microsoft.office365.meetingfeedback.model.service.MyMeetingsService;
-
-import javax.inject.Inject;
 
 public class ConnectActivity extends BaseActivity implements AuthenticationResultsCallback, IWindowComponent {
 
@@ -27,9 +22,6 @@ public class ConnectActivity extends BaseActivity implements AuthenticationResul
     private ProgressBar mConnectProgressBar;
     private TextView mDescriptionTextView;
     private String TAG = "ConnectActivity";
-
-    @Inject
-    ServiceDiscoveryManager mServiceDiscoveryManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,24 +44,10 @@ public class ConnectActivity extends BaseActivity implements AuthenticationResul
     public void onAuthenticationSuccess() {
         Log.d(TAG, "authentication success!");
 
-        mDialogUtil.showProgressDialog(this, "Discovering Services...", "one moment..");
-        mServiceDiscoveryManager.discoverServices(new ServiceDiscoveryCallback() {
-            @Override
-            public void onServiceDiscoverySuccess() {
-                finish();
-                Intent startingIntent = getIntent();
-                String eventId = startingIntent.getStringExtra(MyMeetingsService.EVENT_ID);
-                Intent intent = new Intent(ConnectActivity.this, CalendarActivity.class);
-//                intent.putExtra(MyMeetingsService.EVENT_ID, eventId);
-                startActivity(intent);
-            }
-
-            @Override
-            public void onServiceDiscoveryFailure(Throwable throwable) {
-                mDialogUtil.dismissDialog(ConnectActivity.this);
-            }
-        });
-
+        finish();
+        Intent startingIntent = getIntent();
+        Intent intent = new Intent(ConnectActivity.this, CalendarActivity.class);
+        startActivity(intent);
     }
 
     @Override
