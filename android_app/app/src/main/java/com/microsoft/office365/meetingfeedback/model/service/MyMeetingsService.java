@@ -49,7 +49,6 @@ public class MyMeetingsService extends IntentService {
     private String mUsername;
     private Map<String, Double> mSavedMeetingResults;
     private NotificationManager mNotificationManager;
-    private ADALDependencyResolver mResolver;
 
     public MyMeetingsService() {
         super(MY_MEETINGS_SERVICE);
