@@ -63,6 +63,7 @@ public class MyMeetingsService extends IntentService {
         mUsername = mSharedPrefsUtil.getSavedUsername();
         mSavedMeetingResults = mSharedPrefsUtil.getSavedMeetingResults();
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+        mADALDependencyResolver.setResourceId(Constants.OUTLOOK_RESOURCE_ID);
     }
 
     @Override
@@ -107,8 +108,6 @@ public class MyMeetingsService extends IntentService {
                 .setContentText("Your meeting has received a new rating. Click to view");
         Intent intent = new Intent(this, ConnectActivity.class);
         intent.putExtra(EVENT_ID, id);
-
-        mADALDependencyResolver.setResourceId(Constants.OUTLOOK_RESOURCE_ID);
 
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
         builder.setContentIntent(pIntent);

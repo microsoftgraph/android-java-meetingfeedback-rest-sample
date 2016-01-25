@@ -71,7 +71,6 @@ public class AuthenticationManager {
         cookieManager.removeAllCookie();
         mAuthenticationContext.getCache().removeAll();
         mDataStore.logout();
-        mResolver.setResourceId(Constants.OUTLOOK_RESOURCE_ID);
         mAlarmManager.cancelRatingService();
     }
 

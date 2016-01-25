@@ -25,16 +25,15 @@ public class ClientManager {
         mDataStore = dataStore;
         mResolver = resolver;
         mRatingServiceManager = ratingServiceManager;
+        mResolver.setResourceId(Constants.OUTLOOK_RESOURCE_ID);
     }
 
     private CalendarClientManager setupCalendarClientManager() {
-        mResolver.setResourceId(Constants.OUTLOOK_RESOURCE_ID);
         OutlookClient outlookClient = new OutlookClient(Constants.ENDPOINT_ID, mResolver);
         return new CalendarClientManager(mDataStore, outlookClient);
     }
 
     private EmailClientManager setupMailClientManager() {
-        mResolver.setResourceId(Constants.OUTLOOK_RESOURCE_ID);
         OutlookClient outlookClient = new OutlookClient(Constants.ENDPOINT_ID, mResolver);
         return new EmailClientManager(mDataStore, outlookClient, mRatingServiceManager);
     }
