@@ -83,6 +83,10 @@ public class DataStore {
         return mUser != null;
     }
 
+    public String getUserId() {
+        return mUser.getUserId();
+    }
+
     public String getUsername() {
         return mUser.getUsername();
     }

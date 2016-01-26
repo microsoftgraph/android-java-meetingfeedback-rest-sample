@@ -8,14 +8,20 @@ import com.microsoft.aad.adal.UserInfo;
 
 public class User {
 
+    private String mUserId;
     private String mUsername;
     private String mFirstName;
     private String mLastName;
 
     public User(UserInfo userInfo) {
+        mUserId = userInfo.getUserId();
         mUsername = userInfo.getDisplayableId();
         mFirstName = userInfo.getGivenName();
         mLastName = userInfo.getFamilyName();
+    }
+
+    public String getUserId() {
+        return mUserId;
     }
 
     public String getUsername() {
