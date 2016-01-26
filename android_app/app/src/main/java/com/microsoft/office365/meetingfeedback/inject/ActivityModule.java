@@ -17,7 +17,6 @@ import com.microsoft.office365.meetingfeedback.util.DialogUtil;
 import com.microsoft.office365.meetingfeedback.view.CalendarPageFragment;
 import com.microsoft.office365.meetingfeedback.view.CalendarRangeFragment;
 import com.microsoft.office365.meetingfeedback.view.RatingDialogFragment;
-import com.microsoft.services.orc.resolvers.ADALDependencyResolver;
 
 import dagger.Module;
 import dagger.Provides;
@@ -48,10 +47,9 @@ public class ActivityModule {
 
     @Provides
     public AuthenticationManager providesAuthenticationManager(DataStore dataStore,
-                                                               ADALDependencyResolver resolver,
                                                                RatingServiceAlarmManager alarmManager) {
         AuthenticationContext authenticationContext = AuthenticationContextBuilder.newInstance(mActivity);
-        return new AuthenticationManager(resolver, dataStore, authenticationContext, alarmManager);
+        return new AuthenticationManager(dataStore, authenticationContext, alarmManager);
     }
 
 }

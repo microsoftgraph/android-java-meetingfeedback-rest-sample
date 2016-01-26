@@ -20,14 +20,12 @@ import com.microsoft.services.orc.resolvers.ADALDependencyResolver;
 public class AuthenticationManager {
 
     private static final String TAG = "AuthenticationManager";
-    private ADALDependencyResolver mResolver;
     private DataStore mDataStore;
     private AuthenticationContext mAuthenticationContext;
     private RatingServiceAlarmManager mAlarmManager;
 
-    public AuthenticationManager(ADALDependencyResolver resolver, DataStore dataStore, AuthenticationContext authenticationContext,
+    public AuthenticationManager(DataStore dataStore, AuthenticationContext authenticationContext,
                                  RatingServiceAlarmManager alarmManager) {
-        mResolver = resolver;
         mDataStore = dataStore;
         mAuthenticationContext = authenticationContext;
         mAlarmManager = alarmManager;
