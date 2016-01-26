@@ -37,7 +37,7 @@ public class AuthenticationManager {
      * Description: Calls AuthenticationContext.acquireToken(...) once to authenticate with
      * user's credentials and avoid interactive prompt on later calls.
      */
-    public void authenticate(final AuthenticationResultsCallback resultsCallback) {
+    public void authenticate(final AuthenticationCallback resultsCallback) {
         AuthenticationCallback<AuthenticationResult> authenticationCallback = new AuthenticationCallback<AuthenticationResult>() {
             @Override
             public void onSuccess(final AuthenticationResult authenticationResult) {
@@ -45,13 +45,13 @@ public class AuthenticationManager {
                     //cache the user
                     User user = new User(authenticationResult.getUserInfo());
                     mDataStore.setUser(user);
-                    resultsCallback.onAuthenticationSuccess();
+                    resultsCallback.onSuccess(authenticationResult);
                 }
             }
 
             @Override
             public void onError(Exception exception) {
-                resultsCallback.onAuthenticationFailure(exception);
+                resultsCallback.onError(exception);
             }
         };
 

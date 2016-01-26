@@ -5,6 +5,7 @@
 package com.microsoft.office365.meetingfeedback;
 
 import android.content.Intent;
+import android.hardware.fingerprint.FingerprintManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,10 +14,10 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.microsoft.aad.adal.AuthenticationCallback;
 import com.microsoft.aad.adal.IWindowComponent;
-import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationResultsCallback;
 
-public class ConnectActivity extends BaseActivity implements AuthenticationResultsCallback, IWindowComponent {
+public class ConnectActivity extends BaseActivity implements AuthenticationCallback, IWindowComponent {
 
     private Button mConnectButton;
     private ProgressBar mConnectProgressBar;
@@ -41,17 +42,16 @@ public class ConnectActivity extends BaseActivity implements AuthenticationResul
     }
 
     @Override
-    public void onAuthenticationSuccess() {
+    public void onSuccess(Object result) {
         Log.d(TAG, "authentication success!");
 
         finish();
-        Intent startingIntent = getIntent();
         Intent intent = new Intent(ConnectActivity.this, CalendarActivity.class);
         startActivity(intent);
     }
 
     @Override
-    public void onAuthenticationFailure(Exception e) {
+    public void onError(Exception e) {
         Log.e(TAG, "authentication failure! Exception: " + e);
         mConnectButton.setVisibility(View.VISIBLE);
         mConnectProgressBar.setVisibility(View.GONE);
