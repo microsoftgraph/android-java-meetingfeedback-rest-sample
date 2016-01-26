@@ -7,7 +7,6 @@ package com.microsoft.office365.meetingfeedback;
 import android.app.Application;
 
 import com.microsoft.office365.meetingfeedback.inject.ApplicationModule;
-import com.microsoft.office365.meetingfeedback.util.AuthUtil;
 
 import dagger.ObjectGraph;
 
@@ -20,7 +19,6 @@ public class MeetingFeedbackApplication extends Application {
         super.onCreate();
 
         applicationGraph = ObjectGraph.create(new ApplicationModule(this));
-        AuthUtil.setupEncryptionKey();
     }
 
     public ObjectGraph getApplicationGraph() {
