@@ -18,7 +18,7 @@ The sample includes an Android client and a Ruby on Rails server-side component.
 
 * [Android Studio](http://developer.android.com/sdk/index.html) version 1.0 or later.
 * An Office 365 account. You can sign up for [an Office 365 Developer subscription](http://aka.ms/o365-android-connect-signup) that includes the resources that you need to start building Office 365 apps. If you get a developer subscription you also get an Office 365 account. 
-* A client id and redirect uri values of an application registered in Azure. The application must run the **Send mail as a user** and **Read user calendars** permissions. You can also [add a native client application in Azure](http://aka.ms/o365-android-connect-addapp) and [grant proper permissions](https://github.com/OfficeDev/O365-Android-MeetingFeedback/wiki/Grant-permissions-to-the-application-in-Azure) to it.
+* A client id and redirect uri values of an application registered in Azure. The application must run the **Send mail as a user** and **Read user calendars** permissions. You can also [add a native client application in Azure](https://msdn.microsoft.com/office/office365/HowTo/add-common-consent-manually#bk_RegisterNativeApp) and [grant proper permissions](https://github.com/OfficeDev/O365-Android-MeetingFeedback/wiki/Grant-permissions-to-the-application-in-Azure) to it.
 
 ### Ruby on Rails application component
 
