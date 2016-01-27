@@ -39,10 +39,6 @@ public class RatingServiceManager {
         mDataStore = dataStore;
     }
 
-    public RatingService getRatingService() {
-        return mRatingService;
-    }
-
     public void loadRatingsFromWebservice() {
         mRatingService.getMeetingsAsync(mDataStore.getUsername(), new Callback<List<MeetingServiceResponseData>>() {
             @Override
