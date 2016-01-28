@@ -191,7 +191,7 @@ public class MeetingDetailActivity extends NavigationBarActivity {
         RatingDialogFragment.newInstance(event.mEventId).show(getSupportFragmentManager(), RATING_DIALOG_FRAGMENT_TAG);
     }
 
-    public void onEvent(SendRatingEvent event) {
+    public void onEvent(final SendRatingEvent event) {
         mDialogUtil.showProgressDialog(this, getString(R.string.submit_rating), getString(R.string.submitting_rating_description));
         mClientManager.getEmailClientManager().sendRating(event.mRatingData);
     }

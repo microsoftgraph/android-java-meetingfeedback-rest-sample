@@ -12,11 +12,14 @@ import com.microsoft.office365.meetingfeedback.MeetingDetailActivity;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationContextBuilder;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationManager;
+import com.microsoft.office365.meetingfeedback.model.email.EmailService;
 import com.microsoft.office365.meetingfeedback.model.service.RatingServiceAlarmManager;
 import com.microsoft.office365.meetingfeedback.util.DialogUtil;
 import com.microsoft.office365.meetingfeedback.view.CalendarPageFragment;
 import com.microsoft.office365.meetingfeedback.view.CalendarRangeFragment;
 import com.microsoft.office365.meetingfeedback.view.RatingDialogFragment;
+
+import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
@@ -46,10 +49,16 @@ public class ActivityModule {
     }
 
     @Provides
+    @Singleton
     public AuthenticationManager providesAuthenticationManager(DataStore dataStore,
                                                                RatingServiceAlarmManager alarmManager) {
         AuthenticationContext authenticationContext = AuthenticationContextBuilder.newInstance(mActivity);
         return new AuthenticationManager(dataStore, authenticationContext, alarmManager);
     }
 
+    @Provides
+    @Singleton
+    public EmailService providesEmailService(AuthenticationManager authenticationManager) {
+        return new EmailService(authenticationManager);
+    }
 }

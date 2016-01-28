@@ -18,7 +18,10 @@ public class Constants {
     public static final String SERVICE_ENDPOINT = "<YOUR_SERVICE_ENDPOINT>";
     public static final String REVIEW_SENDER_ADDRESS = "<YOUR_REVIEW_SENDER_ADDRESS>";
 
-    public static final String ENDPOINT_ID = "https://outlook.office365.com/" + "api/v1.0";
+    public static final String ENDPOINT_ID = "https://outlook.office365.com/api/v1.0";
+
+    public static final String MICROSOFT_GRAPH_ENDPOINT = "https://graph.microsoft.com/v1.0/";
+    public static final String MICROSOFT_GRAPH_RESOURCE_ID = "https://graph.microsoft.com/";
 
     public static Recipient getReviewSenderRecipient() {
         EmailAddress emailAddress = new EmailAddress();

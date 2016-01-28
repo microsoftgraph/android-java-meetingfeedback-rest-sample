@@ -22,6 +22,7 @@ import com.microsoft.office365.meetingfeedback.model.User;
 import com.microsoft.office365.meetingfeedback.model.service.RatingServiceAlarmManager;
 
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.Future;
 
 public class AuthenticationManager {
 
@@ -29,6 +30,7 @@ public class AuthenticationManager {
     private DataStore mDataStore;
     private AuthenticationContext mAuthenticationContext;
     private RatingServiceAlarmManager mAlarmManager;
+    private String mResourceId;
 
     static{
         // Devices with API level lower than 18 must setup an encryption key.
@@ -51,6 +53,7 @@ public class AuthenticationManager {
         mDataStore = dataStore;
         mAuthenticationContext = authenticationContext;
         mAlarmManager = alarmManager;
+        mResourceId = Constants.OUTLOOK_RESOURCE_ID;
     }
 
     /**
@@ -76,16 +79,18 @@ public class AuthenticationManager {
      * In case of an error, it falls back to {@link AuthenticationManager#authenticatePrompt(AuthenticationCallback)}.
      * @param authenticationCallback The callback to notify when the processing is finished.
      */
-    private void authenticateSilent(final AuthenticationCallback<AuthenticationResult> authenticationCallback) {
-        mAuthenticationContext.acquireTokenSilent(
-                Constants.OUTLOOK_RESOURCE_ID,
+    public Future authenticateSilent(final AuthenticationCallback<AuthenticationResult> authenticationCallback) {
+        return mAuthenticationContext.acquireTokenSilent(
+                mResourceId,
                 Constants.CLIENT_ID,
                 mDataStore.getUserId(),
                 new AuthenticationCallback<AuthenticationResult>() {
                     @Override
                     public void onSuccess(final AuthenticationResult authenticationResult) {
                         if (authenticationResult != null && authenticationResult.getStatus() == AuthenticationStatus.Succeeded) {
-                            authenticationCallback.onSuccess(authenticationResult);
+                            if(null != authenticationCallback) {
+                                authenticationCallback.onSuccess(authenticationResult);
+                            }
                         } else if (authenticationResult != null) {
                             // I could not authenticate the user silently,
                             // falling back to prompt the user for credentials.
@@ -109,7 +114,7 @@ public class AuthenticationManager {
      */
     private void authenticatePrompt(final AuthenticationCallback<AuthenticationResult> authenticationCallback) {
         mAuthenticationContext.acquireToken(
-                Constants.OUTLOOK_RESOURCE_ID,
+                mResourceId,
                 Constants.CLIENT_ID,
                 Constants.REDIRECT_URI,
                 null,
@@ -121,18 +126,22 @@ public class AuthenticationManager {
                         if (authenticationResult != null && authenticationResult.getStatus() == AuthenticationStatus.Succeeded) {
                             User user = new User(authenticationResult.getUserInfo());
                             mDataStore.setUser(user);
-                            authenticationCallback.onSuccess(authenticationResult);
+                            if(null != authenticationCallback) {
+                                authenticationCallback.onSuccess(authenticationResult);
+                            }
                         } else if (authenticationResult != null) {
                             // We need to make sure that there is no data stored with the failed auth
                             signout();
                             // This condition can happen if user signs in with an MSA account
                             // instead of an Office 365 account
-                            authenticationCallback.onError(
-                                    new AuthenticationException(
-                                            ADALError.AUTH_FAILED,
-                                            authenticationResult.getErrorDescription()
-                                    )
-                            );
+                            if(null != authenticationCallback) {
+                                authenticationCallback.onError(
+                                        new AuthenticationException(
+                                                ADALError.AUTH_FAILED,
+                                                authenticationResult.getErrorDescription()
+                                        )
+                                );
+                            }
                         }
                     }
 
@@ -144,6 +153,10 @@ public class AuthenticationManager {
                     }
                 }
         );
+    }
+
+    public void setResourceId(String resourceId) {
+        mResourceId = resourceId;
     }
 
     public void signout() {

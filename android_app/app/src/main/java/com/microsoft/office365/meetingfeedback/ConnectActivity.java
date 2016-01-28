@@ -5,7 +5,6 @@
 package com.microsoft.office365.meetingfeedback;
 
 import android.content.Intent;
-import android.hardware.fingerprint.FingerprintManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;

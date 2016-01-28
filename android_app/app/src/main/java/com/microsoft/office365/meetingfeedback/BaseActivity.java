@@ -6,13 +6,14 @@ package com.microsoft.office365.meetingfeedback;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.microsoft.office365.meetingfeedback.event.SendRatingFailedEvent;
 import com.microsoft.office365.meetingfeedback.inject.ActivityModule;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationManager;
+import com.microsoft.office365.meetingfeedback.model.email.EmailService;
 import com.microsoft.office365.meetingfeedback.model.officeclient.ClientManager;
 import com.microsoft.office365.meetingfeedback.util.ConnectivityUtil;
 import com.microsoft.office365.meetingfeedback.util.DialogUtil;
@@ -23,7 +24,7 @@ import javax.inject.Inject;
 import dagger.ObjectGraph;
 import de.greenrobot.event.EventBus;
 
-public abstract class BaseActivity extends ActionBarActivity {
+public abstract class BaseActivity extends AppCompatActivity {
 
     public static final String RATING_DIALOG_FRAGMENT_TAG = "RatingDialogFragmentTag";
 
@@ -33,6 +34,8 @@ public abstract class BaseActivity extends ActionBarActivity {
     AuthenticationManager mAuthenticationManager;
     @Inject
     ClientManager mClientManager;
+    @Inject
+    EmailService mEmailService;
     @Inject
     public DataStore mDataStore;
     @Inject
