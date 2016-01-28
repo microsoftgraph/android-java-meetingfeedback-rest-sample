@@ -65,10 +65,6 @@ public class EventDecorator implements Serializable {
         return mServiceData != null && (mServiceData.mRatings != null && mServiceData.mRatings.size() > 0);
     }
 
-    public boolean isOwner(String eventOwner) {
-        return mIsOrganizer;
-    }
-
     public int getRatingCount() {
         if (mServiceData == null || mServiceData.mRatings == null) {
             return 0;
@@ -101,7 +97,7 @@ public class EventDecorator implements Serializable {
         } else {
             viewHolder.mEventRatingButton.setVisibility(View.VISIBLE);
         }
-        if (isOwner(currentUserName)) {
+        if (mIsOrganizer) {
             viewHolder.mEventRatingButton.setVisibility(View.GONE);
         }
     }

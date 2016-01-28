@@ -153,7 +153,7 @@ public class MeetingDetailActivity extends NavigationBarActivity {
 
     private void setupRatingButton() {
         //rating button
-        if (mEventDecorator.isOwner(mDataStore.getUsername())) {
+        if (mEventDecorator.mIsOrganizer) {
             mEventRatingButton.setVisibility(View.GONE);
         } else if (mEventDecorator.hasAlreadyRated()) {
             mEventRatingButton.setVisibility(View.GONE);
