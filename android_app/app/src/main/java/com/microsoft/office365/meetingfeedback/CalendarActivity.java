@@ -212,17 +212,17 @@ public class CalendarActivity extends NavigationBarActivity {
 
         final Event event = mDataStore.getEventById(sendRatingEvent.mRatingData.mEventId);
         String subject = String.format(
-                "Your meeting, %s, on %s (%s) , was recently reviewed. \n\n",
+                "Your meeting, %s, on %s (%s) , was recently reviewed.",
                 event.getSubject(),
                 FormatUtil.displayFormattedEventDate(event),
                 FormatUtil.displayFormattedEventTime(event));
         StringBuilder stringBuilder = new StringBuilder();
         String eventDate = FormatUtil.displayFormattedEventDate(event);
         String eventTime = FormatUtil.displayFormattedEventTime(event);
-        stringBuilder.append(String.format("Your meeting, %s, on %s (%s) , was recently reviewed. \n\n", event.getSubject(), eventDate, eventTime));
-        stringBuilder.append(String.format("Rating: %s \n", sendRatingEvent.mRatingData.mRating));
+        stringBuilder.append(String.format("<div>Your meeting, %s, on %s (%s) , was recently reviewed.</div>", event.getSubject(), eventDate, eventTime));
+        stringBuilder.append(String.format("<div>Rating: %s </div>", sendRatingEvent.mRatingData.mRating));
         String remarks = TextUtils.isEmpty(sendRatingEvent.mRatingData.mReview) ? "No Remarks." : sendRatingEvent.mRatingData.mReview;
-        stringBuilder.append(String.format("Remarks/How to improve: %s", remarks));
+        stringBuilder.append(String.format("<div>Remarks/How to improve: %s</div>", remarks));
         String body = stringBuilder.toString();
 
         mEmailService.sendMail(
