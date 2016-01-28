@@ -33,18 +33,9 @@ public class ClientManager {
         return new CalendarClientManager(mDataStore, outlookClient);
     }
 
-    private EmailClientManager setupMailClientManager() {
-        OutlookClient outlookClient = new OutlookClient(Constants.ENDPOINT_ID, mResolver);
-        return new EmailClientManager(mDataStore, outlookClient, mRatingServiceManager);
-    }
-
     //todo: make these singletons possibly
     public CalendarClientManager getCalendarClientManager() {
         return setupCalendarClientManager();
-    }
-
-    public EmailClientManager getEmailClientManager() {
-        return setupMailClientManager();
     }
 
 }

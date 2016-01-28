@@ -7,6 +7,7 @@ package com.microsoft.office365.meetingfeedback.model.request;
 import android.util.Log;
 
 import com.microsoft.aad.adal.AuthenticationResult;
+import com.microsoft.office365.meetingfeedback.event.SendRatingFailedEvent;
 import com.microsoft.office365.meetingfeedback.model.Constants;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationManager;
 
@@ -14,6 +15,7 @@ import java.util.concurrent.ExecutionException;
 
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
+import de.greenrobot.event.EventBus;
 
 public class RESTHelper {
     AuthenticationManager mAuthenticationManager;
@@ -37,8 +39,7 @@ public class RESTHelper {
                     AuthenticationResult authenticationResult = (AuthenticationResult)mAuthenticationManager.authenticateSilent(null).get();
                     request.addHeader("Authorization", "Bearer " + authenticationResult.getAccessToken());
                 } catch (InterruptedException | ExecutionException e) {
-                    //TODO: Add better error handling here
-                    Log.e("RESTHelper", e.getMessage());
+                    EventBus.getDefault().post(new SendRatingFailedEvent(e));
                 }
             }
         };
