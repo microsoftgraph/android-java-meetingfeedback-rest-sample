@@ -6,7 +6,7 @@ package com.microsoft.office365.meetingfeedback.model.email.payload;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Senders {
+public class Sender {
 
     @SerializedName("EmailAddress")
     public EmailAddress emailAddress;

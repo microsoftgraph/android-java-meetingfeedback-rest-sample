@@ -9,6 +9,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,12 +19,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.microsoft.office365.meetingfeedback.event.SendRatingEvent;
+import com.microsoft.office365.meetingfeedback.event.SendRatingFailedEvent;
 import com.microsoft.office365.meetingfeedback.event.SendRatingSuccessEvent;
 import com.microsoft.office365.meetingfeedback.event.UserRatingAddedSuccessEvent;
 import com.microsoft.office365.meetingfeedback.event.UserRatingsLoadedSuccessEvent;
+import com.microsoft.office365.meetingfeedback.model.Constants;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventDecorator;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingServiceResponseData;
+import com.microsoft.office365.meetingfeedback.util.EventUtil;
+import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 import com.microsoft.office365.meetingfeedback.view.RatingDialogFragment;
 import com.microsoft.office365.meetingfeedback.view.RatingsRecyclerViewAdapter;
 import com.microsoft.office365.meetingfeedback.view.ShowRatingDialogEvent;
@@ -32,6 +37,9 @@ import com.microsoft.services.outlook.Event;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MeetingDetailActivity extends NavigationBarActivity {
 
@@ -191,9 +199,45 @@ public class MeetingDetailActivity extends NavigationBarActivity {
         RatingDialogFragment.newInstance(event.mEventId).show(getSupportFragmentManager(), RATING_DIALOG_FRAGMENT_TAG);
     }
 
-    public void onEvent(final SendRatingEvent event) {
+    public void onEvent(final SendRatingEvent sendRatingEvent) {
         mDialogUtil.showProgressDialog(this, getString(R.string.submit_rating), getString(R.string.submitting_rating_description));
-        mClientManager.getEmailClientManager().sendRating(event.mRatingData);
+
+        mAuthenticationManager.setResourceId(Constants.MICROSOFT_GRAPH_RESOURCE_ID);
+
+        final Event event = mDataStore.getEventById(sendRatingEvent.mRatingData.mEventId);
+        String subject = String.format(
+                "Your meeting, %s, on %s (%s) , was recently reviewed. \n\n",
+                event.getSubject(),
+                FormatUtil.displayFormattedEventDate(event),
+                FormatUtil.displayFormattedEventTime(event));
+        StringBuilder stringBuilder = new StringBuilder();
+        String eventDate = FormatUtil.displayFormattedEventDate(event);
+        String eventTime = FormatUtil.displayFormattedEventTime(event);
+        stringBuilder.append(String.format("Your meeting, %s, on %s (%s) , was recently reviewed. \n\n", event.getSubject(), eventDate, eventTime));
+        stringBuilder.append(String.format("Rating: %s \n", sendRatingEvent.mRatingData.mRating));
+        String remarks = TextUtils.isEmpty(sendRatingEvent.mRatingData.mReview) ? "No Remarks." : sendRatingEvent.mRatingData.mReview;
+        stringBuilder.append(String.format("Remarks/How to improve: %s", remarks));
+        String body = stringBuilder.toString();
+
+        mEmailService.sendMail(
+                event.getOrganizer().getEmailAddress().getAddress(),
+                subject,
+                body,
+                new Callback<Void>() {
+                    @Override
+                    public void success(Void aVoid, Response response) {
+                        //update the webservice with the ratingEvent rating
+                        String eventOwner = EventUtil.getEventOwner(event);
+                        mRatingServiceManager.addRating(eventOwner, sendRatingEvent.mRatingData);
+                        EventBus.getDefault().post(new SendRatingSuccessEvent(sendRatingEvent.mRatingData.mEventId));
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        EventBus.getDefault().post(new SendRatingFailedEvent(error));
+                    }
+                }
+        );
     }
 
 

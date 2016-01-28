@@ -21,8 +21,8 @@ public class Message {
     public ToRecipients[] mToRecipients;
 
     @SerializedName("sender")
-    public Senders[] mSenders;
+    public Sender mSender;
 
     @SerializedName("from")
-    public Froms[] mFroms;
+    public From mFrom;
 }

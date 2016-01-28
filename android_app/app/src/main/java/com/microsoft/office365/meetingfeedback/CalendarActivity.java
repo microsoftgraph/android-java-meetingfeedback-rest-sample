@@ -205,12 +205,12 @@ public class CalendarActivity extends NavigationBarActivity {
         RatingDialogFragment.newInstance(event.mEventId).show(getSupportFragmentManager(), RATING_DIALOG_FRAGMENT_TAG);
     }
 
-    public void onEvent(final SendRatingEvent ratingEvent) {
+    public void onEvent(final SendRatingEvent sendRatingEvent) {
         mDialogUtil.showProgressDialog(this, getString(R.string.submit_rating), getString(R.string.submitting_rating_description));
 
         mAuthenticationManager.setResourceId(Constants.MICROSOFT_GRAPH_RESOURCE_ID);
 
-        final Event event = getEvent(ratingEvent.mRatingData.mEventId);
+        final Event event = mDataStore.getEventById(sendRatingEvent.mRatingData.mEventId);
         String subject = String.format(
                 "Your meeting, %s, on %s (%s) , was recently reviewed. \n\n",
                 event.getSubject(),
@@ -220,8 +220,8 @@ public class CalendarActivity extends NavigationBarActivity {
         String eventDate = FormatUtil.displayFormattedEventDate(event);
         String eventTime = FormatUtil.displayFormattedEventTime(event);
         stringBuilder.append(String.format("Your meeting, %s, on %s (%s) , was recently reviewed. \n\n", event.getSubject(), eventDate, eventTime));
-        stringBuilder.append(String.format("Rating: %s \n", ratingEvent.mRatingData.mRating));
-        String remarks = TextUtils.isEmpty(ratingEvent.mRatingData.mReview) ? "No Remarks." : ratingEvent.mRatingData.mReview;
+        stringBuilder.append(String.format("Rating: %s \n", sendRatingEvent.mRatingData.mRating));
+        String remarks = TextUtils.isEmpty(sendRatingEvent.mRatingData.mReview) ? "No Remarks." : sendRatingEvent.mRatingData.mReview;
         stringBuilder.append(String.format("Remarks/How to improve: %s", remarks));
         String body = stringBuilder.toString();
 
@@ -234,8 +234,8 @@ public class CalendarActivity extends NavigationBarActivity {
                     public void success(Void aVoid, Response response) {
                         //update the webservice with the ratingEvent rating
                         String eventOwner = EventUtil.getEventOwner(event);
-                        mRatingServiceManager.addRating(eventOwner, ratingEvent.mRatingData);
-                        EventBus.getDefault().post(new SendRatingSuccessEvent(ratingEvent.mRatingData.mEventId));
+                        mRatingServiceManager.addRating(eventOwner, sendRatingEvent.mRatingData);
+                        EventBus.getDefault().post(new SendRatingSuccessEvent(sendRatingEvent.mRatingData.mEventId));
                     }
 
                     @Override
@@ -266,10 +266,5 @@ public class CalendarActivity extends NavigationBarActivity {
         mCalendarViewPager.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
     }
-
-    private Event getEvent(String id) {
-        return mDataStore.getEventById(id);
-    }
-
 
 }

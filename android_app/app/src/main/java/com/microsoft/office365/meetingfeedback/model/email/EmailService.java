@@ -8,10 +8,10 @@ import com.microsoft.office365.meetingfeedback.model.Constants;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationManager;
 import com.microsoft.office365.meetingfeedback.model.email.payload.Body;
 import com.microsoft.office365.meetingfeedback.model.email.payload.EmailAddress;
-import com.microsoft.office365.meetingfeedback.model.email.payload.Froms;
+import com.microsoft.office365.meetingfeedback.model.email.payload.From;
 import com.microsoft.office365.meetingfeedback.model.email.payload.Message;
 import com.microsoft.office365.meetingfeedback.model.email.payload.MessageWrapper;
-import com.microsoft.office365.meetingfeedback.model.email.payload.Senders;
+import com.microsoft.office365.meetingfeedback.model.email.payload.Sender;
 import com.microsoft.office365.meetingfeedback.model.email.payload.ToRecipients;
 import com.microsoft.office365.meetingfeedback.model.request.RESTHelper;
 
@@ -67,24 +67,24 @@ public class EmailService {
         ToRecipients toRecipients = new ToRecipients();
         toRecipients.emailAddress = mailRecipient;
 
-        EmailAddress mailSender = new EmailAddress();
-        mailSender.mAddress = Constants.REVIEW_SENDER_ADDRESS;
+        EmailAddress ratingAddress = new EmailAddress();
+        ratingAddress.mAddress = Constants.REVIEW_SENDER_ADDRESS;
 
-        Senders mailSenders = new Senders();
-        mailSenders.emailAddress = mailSender;
-        Froms mailFroms = new Froms();
-        mailFroms.emailAddress = mailSender;
+        Sender sender = new Sender();
+        sender.emailAddress = ratingAddress;
+        From from = new From();
+        from.emailAddress = ratingAddress;
 
         Body body = new Body();
         body.mContentType = "HTML";
-        body.mContent = "Body";//htmlBody;
+        body.mContent = htmlBody;
 
         Message sampleMsg = new Message();
-        sampleMsg.mSubject = "Subject";//subject;
+        sampleMsg.mSubject = subject;
         sampleMsg.mBody = body;
         sampleMsg.mToRecipients = new ToRecipients[]{toRecipients};
-        //sampleMsg.mSenders = new Senders[]{mailSenders};
-        //sampleMsg.mFroms = new Froms[]{mailFroms};
+        sampleMsg.mSender = sender;
+        sampleMsg.mFrom = from;
 
         return new MessageWrapper(sampleMsg);
     }
