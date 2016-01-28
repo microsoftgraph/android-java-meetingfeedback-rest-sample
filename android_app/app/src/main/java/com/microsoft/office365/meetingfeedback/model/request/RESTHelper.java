@@ -48,12 +48,6 @@ public class RESTHelper {
         return new RestAdapter.Builder()
                 .setEndpoint(Constants.MICROSOFT_GRAPH_ENDPOINT)
                 .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setLog(new RestAdapter.Log() {
-                    @Override
-                    public void log(String msg) {
-                        Log.i("Retrofit", msg);
-                    }
-                })
                 .setRequestInterceptor(requestInterceptor)
                 .build();
     }
