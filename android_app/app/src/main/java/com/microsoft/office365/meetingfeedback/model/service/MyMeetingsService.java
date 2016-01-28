@@ -94,7 +94,7 @@ public class MyMeetingsService extends IntentService {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.e(TAG, "An error occured", error);
+                Log.e(TAG, "An error occurred", error);
             }
         });
     }

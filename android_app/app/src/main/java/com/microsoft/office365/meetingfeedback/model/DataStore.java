@@ -72,19 +72,19 @@ public class DataStore {
 
     public void setUser(User user) {
         mUser = user;
-        String userName = null;
-        if (mUser != null) {
-            userName = mUser.getUsername();
+        if (null != mUser) {
+            mSharedPrefsUtil.setSavedUserId(mUser.getUserId());
+        } else {
+            mSharedPrefsUtil.setSavedUserId(null);
         }
-        mSharedPrefsUtil.setSavedUsername(userName);
     }
 
     public boolean isUserLoggedIn() {
-        return mUser != null;
+        return mSharedPrefsUtil.getSavedUserId() != null;
     }
 
     public String getUserId() {
-        return mUser.getUserId();
+        return mSharedPrefsUtil.getSavedUserId();
     }
 
     public String getUsername() {

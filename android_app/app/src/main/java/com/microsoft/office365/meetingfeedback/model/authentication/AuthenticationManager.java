@@ -88,10 +88,14 @@ public class AuthenticationManager {
                     @Override
                     public void onSuccess(final AuthenticationResult authenticationResult) {
                         if (authenticationResult != null && authenticationResult.getStatus() == AuthenticationStatus.Succeeded) {
+                            if(null == mDataStore.getUser()) {
+                                User user = new User(authenticationResult.getUserInfo());
+                                mDataStore.setUser(user);
+                            }
                             if(null != authenticationCallback) {
                                 authenticationCallback.onSuccess(authenticationResult);
                             }
-                        } else if (authenticationResult != null) {
+                        } else if (null != authenticationResult) {
                             // I could not authenticate the user silently,
                             // falling back to prompt the user for credentials.
                             authenticatePrompt(authenticationCallback);
