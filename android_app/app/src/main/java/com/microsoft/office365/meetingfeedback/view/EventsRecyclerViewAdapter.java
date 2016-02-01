@@ -26,11 +26,9 @@ import de.greenrobot.event.EventBus;
 public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecyclerViewAdapter.EventsViewHolder> {
 
     private final List<EventDecorator> mDisplayEvents;
-    private DataStore mDataStore;
     private Context mContext;
 
-    public EventsRecyclerViewAdapter(Context context, DataStore dataStore, List<EventDecorator> displayEvents) {
-        mDataStore = dataStore;
+    public EventsRecyclerViewAdapter(Context context, List<EventDecorator> displayEvents) {
         mContext = context;
         mDisplayEvents = displayEvents;
     }
@@ -67,7 +65,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
                 EventBus.getDefault().post(new ShowRatingDialogEvent(getItem(i).mEventId));
             }
         });
-        event.setupEventDisplay(mContext, mDataStore.getUsername(), eventsViewHolder);
+        event.setupEventDisplay(mContext, eventsViewHolder);
     }
 
 

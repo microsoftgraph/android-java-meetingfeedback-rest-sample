@@ -79,7 +79,7 @@ public class EventDecorator implements Serializable {
         return 0.0f;
     }
 
-    public void setupEventDisplay(Context context, String currentUserName, EventsRecyclerViewAdapter.EventsViewHolder viewHolder) {
+    public void setupEventDisplay(Context context, EventsRecyclerViewAdapter.EventsViewHolder viewHolder) {
         viewHolder.mRatingsCount.setVisibility(View.GONE);
         if (hasRatings()) {
             viewHolder.mRatingsCount.setVisibility(View.VISIBLE);
