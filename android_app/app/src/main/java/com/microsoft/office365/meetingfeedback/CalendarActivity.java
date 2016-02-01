@@ -103,7 +103,7 @@ public class CalendarActivity extends NavigationBarActivity {
             }
         });
         updateCurrentFilter();
-        mCalendarViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mCalendarViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }

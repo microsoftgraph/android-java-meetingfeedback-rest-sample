@@ -16,7 +16,6 @@ import android.widget.TextView;
 
 import com.microsoft.office365.meetingfeedback.MeetingDetailActivity;
 import com.microsoft.office365.meetingfeedback.R;
-import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventDecorator;
 
 import java.util.List;

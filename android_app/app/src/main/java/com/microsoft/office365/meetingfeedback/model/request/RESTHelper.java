@@ -4,8 +4,6 @@
  */
 package com.microsoft.office365.meetingfeedback.model.request;
 
-import android.util.Log;
-
 import com.microsoft.aad.adal.AuthenticationResult;
 import com.microsoft.office365.meetingfeedback.event.SendRatingFailedEvent;
 import com.microsoft.office365.meetingfeedback.model.Constants;
@@ -13,9 +11,9 @@ import com.microsoft.office365.meetingfeedback.model.authentication.Authenticati
 
 import java.util.concurrent.ExecutionException;
 
+import de.greenrobot.event.EventBus;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
-import de.greenrobot.event.EventBus;
 
 public class RESTHelper {
     AuthenticationManager mAuthenticationManager;

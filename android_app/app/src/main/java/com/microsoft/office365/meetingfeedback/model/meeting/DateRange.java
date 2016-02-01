@@ -31,6 +31,6 @@ public class DateRange implements Serializable {
     public String getRangeAsFormattedString() {
         String start = FormatUtil.formatDate(mStart.getTime());
         String end = FormatUtil.formatDate(mEnd.getTime());
-        return String.format("%s - %s", end, start, Locale.US);
+        return String.format("%s - %s", end, start);
     }
 }
