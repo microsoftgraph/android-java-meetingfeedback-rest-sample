@@ -21,7 +21,7 @@ import com.microsoft.office365.meetingfeedback.R;
 import com.microsoft.office365.meetingfeedback.event.SendRatingEvent;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.meeting.RatingData;
-import com.microsoft.services.outlook.Event;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 
 import javax.inject.Inject;
 
@@ -67,13 +67,13 @@ public class RatingDialogFragment extends BaseDialogFragment {
                 .setPositiveButton(R.string.rate_button_txt, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String eventOwner = mEvent.getOrganizer().getEmailAddress().getName();
+                        String eventOwner = mEvent.mOrganizer.emailAddress.mName;
                         EventBus.getDefault().post(new SendRatingEvent(eventOwner, buildRatingData()));
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null);
 
-        mOrganizer.setText(mEvent.getOrganizer().getEmailAddress().getName());
+        mOrganizer.setText(mEvent.mOrganizer.emailAddress.mName);
 
         final AlertDialog alertDialog = builder.create();
 
@@ -99,11 +99,11 @@ public class RatingDialogFragment extends BaseDialogFragment {
     }
 
     private RatingData buildRatingData() {
-        return new RatingData(mEvent.getICalUId(), mRatingBar.getRating(), mComments.getText().toString(), mUsername);
+        return new RatingData(mEvent.mICalUId, mRatingBar.getRating(), mComments.getText().toString(), mUsername);
     }
 
     private String buildEventTitle() {
-        return String.format("Rate %s", mEvent.getSubject());
+        return String.format("Rate %s", mEvent.mSubject);
     }
 
 }

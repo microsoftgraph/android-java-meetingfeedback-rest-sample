@@ -53,7 +53,7 @@ public class AuthenticationManager {
         mDataStore = dataStore;
         mAuthenticationContext = authenticationContext;
         mAlarmManager = alarmManager;
-        mResourceId = Constants.OUTLOOK_RESOURCE_ID;
+        mResourceId = Constants.MICROSOFT_GRAPH_RESOURCE_ID;
     }
 
     /**
@@ -157,10 +157,6 @@ public class AuthenticationManager {
                     }
                 }
         );
-    }
-
-    public void setResourceId(String resourceId) {
-        mResourceId = resourceId;
     }
 
     public void signout() {

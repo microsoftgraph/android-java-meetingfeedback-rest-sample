@@ -12,7 +12,8 @@ import com.microsoft.office365.meetingfeedback.MeetingDetailActivity;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationContextBuilder;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationManager;
-import com.microsoft.office365.meetingfeedback.model.email.EmailService;
+import com.microsoft.office365.meetingfeedback.model.outlook.CalendarService;
+import com.microsoft.office365.meetingfeedback.model.outlook.EmailService;
 import com.microsoft.office365.meetingfeedback.model.service.RatingServiceAlarmManager;
 import com.microsoft.office365.meetingfeedback.util.DialogUtil;
 import com.microsoft.office365.meetingfeedback.view.CalendarPageFragment;
@@ -60,5 +61,11 @@ public class ActivityModule {
     @Singleton
     public EmailService providesEmailService(AuthenticationManager authenticationManager) {
         return new EmailService(authenticationManager);
+    }
+
+    @Provides
+    @Singleton
+    public CalendarService providesCalendarService(AuthenticationManager authenticationManager, DataStore dataStore) {
+        return new CalendarService(authenticationManager, dataStore);
     }
 }

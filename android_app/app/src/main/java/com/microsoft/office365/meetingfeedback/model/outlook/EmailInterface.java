@@ -2,9 +2,9 @@
  * Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
  * See LICENSE in the project root for license information.
  */
-package com.microsoft.office365.meetingfeedback.model.email;
+package com.microsoft.office365.meetingfeedback.model.outlook;
 
-import com.microsoft.office365.meetingfeedback.model.email.payload.MessageWrapper;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.MessageWrapper;
 
 import retrofit.Callback;
 import retrofit.http.Body;

@@ -17,7 +17,7 @@ import com.microsoft.office365.meetingfeedback.model.service.RatingServiceAlarmM
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.CreateRatingRequest;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingServiceResponseData;
 import com.microsoft.office365.meetingfeedback.util.EventUtil;
-import com.microsoft.services.outlook.Event;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 
 import java.util.List;
 
@@ -110,6 +110,6 @@ public class RatingServiceManager {
     }
 
     public void loadRatingFromWebservice(Event event) {
-        loadRatingFromWebservice(event.getICalUId(), EventUtil.getEventOwner(event));
+        loadRatingFromWebservice(event.mICalUId, EventUtil.getEventOwner(event));
     }
 }

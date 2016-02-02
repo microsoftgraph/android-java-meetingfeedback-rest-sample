@@ -2,17 +2,17 @@
  * Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
  * See LICENSE in the project root for license information.
  */
-package com.microsoft.office365.meetingfeedback.model.email;
+package com.microsoft.office365.meetingfeedback.model.outlook;
 
 import com.microsoft.office365.meetingfeedback.model.Constants;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationManager;
-import com.microsoft.office365.meetingfeedback.model.email.payload.Body;
-import com.microsoft.office365.meetingfeedback.model.email.payload.EmailAddress;
-import com.microsoft.office365.meetingfeedback.model.email.payload.From;
-import com.microsoft.office365.meetingfeedback.model.email.payload.Message;
-import com.microsoft.office365.meetingfeedback.model.email.payload.MessageWrapper;
-import com.microsoft.office365.meetingfeedback.model.email.payload.Sender;
-import com.microsoft.office365.meetingfeedback.model.email.payload.ToRecipients;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Body;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.EmailAddress;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.From;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Message;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.MessageWrapper;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Sender;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.ToRecipient;
 import com.microsoft.office365.meetingfeedback.model.request.RESTHelper;
 
 import retrofit.Callback;
@@ -38,7 +38,6 @@ public class EmailService {
      * Sends an email message using the Microsoft Graph API on Office 365. The mail is sent
      * from the address of the signed in user.
      *
-     * @param emailAddress The recipient email address.
      * @param subject      The subject to use in the mail message.
      * @param body         The body of the message.
      * @param callback     UI callback to be invoked by Retrofit call when
@@ -64,8 +63,8 @@ public class EmailService {
         EmailAddress mailRecipient = new EmailAddress();
         mailRecipient.mAddress = recipient;
 
-        ToRecipients toRecipients = new ToRecipients();
-        toRecipients.emailAddress = mailRecipient;
+        ToRecipient toRecipient = new ToRecipient();
+        toRecipient.emailAddress = mailRecipient;
 
         EmailAddress ratingAddress = new EmailAddress();
         ratingAddress.mAddress = Constants.REVIEW_SENDER_ADDRESS;
@@ -82,7 +81,7 @@ public class EmailService {
         Message sampleMsg = new Message();
         sampleMsg.mSubject = subject;
         sampleMsg.mBody = body;
-        sampleMsg.mToRecipients = new ToRecipients[]{toRecipients};
+        sampleMsg.mToRecipients = new ToRecipient[]{toRecipient};
         sampleMsg.mSender = sender;
         sampleMsg.mFrom = from;
 

@@ -11,6 +11,7 @@ import com.microsoft.office365.meetingfeedback.event.LoadCalendarFailedEvent;
 import com.microsoft.office365.meetingfeedback.event.LoadCalendarSuccessEvent;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.meeting.DateRange;
+import com.microsoft.office365.meetingfeedback.model.outlook.CalendarService;
 import com.microsoft.services.outlook.Event;
 import com.microsoft.services.outlook.fetchers.OutlookClient;
 
@@ -47,6 +48,7 @@ public class CalendarClientManager {
             protected List<Event> doInBackground(Void... params) {
                 try {
                     DateRange dateRange = getDateRange();
+
                     return mOutlookClient.getMe()
                             .getCalendarView()
                             .select(SELECT_CLAUSE)
@@ -70,7 +72,7 @@ public class CalendarClientManager {
             @Override
             protected void onPostExecute(List<Event> events) {
                 mAccumulatedEvents.addAll(events);
-                mDataStore.setEvents(mAccumulatedEvents);
+                //mDataStore.setEvents(mAccumulatedEvents);
                 EventBus.getDefault().post(new LoadCalendarSuccessEvent());
             }
         }.execute();

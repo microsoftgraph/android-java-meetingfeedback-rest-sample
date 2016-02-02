@@ -4,10 +4,10 @@
  */
 package com.microsoft.office365.meetingfeedback.util;
 
-import com.microsoft.services.outlook.Event;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 
 public class EventUtil {
     public static String getEventOwner(Event event) {
-        return event.getOrganizer().getEmailAddress().getAddress();
+        return event.mOrganizer.emailAddress.mName;
     }
 }

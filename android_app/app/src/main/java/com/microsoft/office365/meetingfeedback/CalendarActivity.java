@@ -36,8 +36,7 @@ import com.microsoft.office365.meetingfeedback.view.CalendarFragmentPagerAdapter
 import com.microsoft.office365.meetingfeedback.view.CalendarRangeFragment;
 import com.microsoft.office365.meetingfeedback.view.RatingDialogFragment;
 import com.microsoft.office365.meetingfeedback.view.ShowRatingDialogEvent;
-import com.microsoft.services.outlook.Event;
-
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
@@ -144,7 +143,9 @@ public class CalendarActivity extends NavigationBarActivity {
 
     private void requestCalendarData() {
         mDialogUtil.showProgressDialog(this, R.string.calendar_events, R.string.calendar_events_loading);
-        mOutlookClientManager.fetchEvents();
+
+        mCalendarService.fetchEvents();
+        //mOutlookClientManager.fetchEvents();
         mRatingServiceManager.loadRatingsFromWebservice();
     }
 
@@ -208,25 +209,23 @@ public class CalendarActivity extends NavigationBarActivity {
     public void onEvent(final SendRatingEvent sendRatingEvent) {
         mDialogUtil.showProgressDialog(this, getString(R.string.submit_rating), getString(R.string.submitting_rating_description));
 
-        mAuthenticationManager.setResourceId(Constants.MICROSOFT_GRAPH_RESOURCE_ID);
-
         final Event event = mDataStore.getEventById(sendRatingEvent.mRatingData.mEventId);
         String subject = String.format(
                 "Your meeting, %s, on %s (%s) , was recently reviewed.",
-                event.getSubject(),
+                event.mSubject,
                 FormatUtil.displayFormattedEventDate(event),
                 FormatUtil.displayFormattedEventTime(event));
         StringBuilder stringBuilder = new StringBuilder();
         String eventDate = FormatUtil.displayFormattedEventDate(event);
         String eventTime = FormatUtil.displayFormattedEventTime(event);
-        stringBuilder.append(String.format("<div>Your meeting, %s, on %s (%s) , was recently reviewed.</div>", event.getSubject(), eventDate, eventTime));
+        stringBuilder.append(String.format("<div>Your meeting, %s, on %s (%s) , was recently reviewed.</div>", event.mSubject, eventDate, eventTime));
         stringBuilder.append(String.format("<div>Rating: %s </div>", sendRatingEvent.mRatingData.mRating));
         String remarks = TextUtils.isEmpty(sendRatingEvent.mRatingData.mReview) ? "No Remarks." : sendRatingEvent.mRatingData.mReview;
         stringBuilder.append(String.format("<div>Remarks/How to improve: %s</div>", remarks));
         String body = stringBuilder.toString();
 
         mEmailService.sendMail(
-                event.getOrganizer().getEmailAddress().getAddress(),
+                event.mOrganizer.emailAddress.mAddress,
                 subject,
                 body,
                 new Callback<Void>() {

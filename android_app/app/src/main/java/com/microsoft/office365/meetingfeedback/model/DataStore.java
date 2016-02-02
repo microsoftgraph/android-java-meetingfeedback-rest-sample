@@ -8,7 +8,7 @@ import com.microsoft.office365.meetingfeedback.model.meeting.EventGroup;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingServiceResponseData;
 import com.microsoft.office365.meetingfeedback.util.CalendarUtil;
 import com.microsoft.office365.meetingfeedback.util.SharedPrefsUtil;
-import com.microsoft.services.outlook.Event;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +58,7 @@ public class DataStore {
     public void setEvents(List<Event> events) {
         mEvents = events;
         for (Event event : events) {
-            mEventsMap.put(event.getICalUId(), event);
+            mEventsMap.put(event.mICalUId, event);
         }
     }
 
@@ -106,7 +106,7 @@ public class DataStore {
     public List<Event> getFilteredEvents() {
         List<Event> filteredEvents = new ArrayList<>();
         for (Event event : getEvents()) {
-            boolean condition = event.getIsOrganizer();
+            boolean condition = event.mIsOrganizer;
             condition = mFilter.equals(EventFilter.MY_MEETINGS) ? condition : !condition;
             if (condition) {
                 filteredEvents.add(event);
