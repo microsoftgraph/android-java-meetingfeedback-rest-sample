@@ -42,7 +42,6 @@ public class MyMeetingsService extends IntentService {
     @Inject
     SharedPrefsUtil mSharedPrefsUtil;
 
-    private String mUsername;
     private Map<String, Double> mSavedMeetingResults;
     private NotificationManager mNotificationManager;
 
@@ -56,7 +55,6 @@ public class MyMeetingsService extends IntentService {
         MeetingFeedbackApplication application = (MeetingFeedbackApplication) getApplication();
         applicationGraph = application.getApplicationGraph();
         applicationGraph.inject(this);
-        mUsername = mSharedPrefsUtil.getSavedUsername();
         mSavedMeetingResults = mSharedPrefsUtil.getSavedMeetingResults();
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     }
@@ -64,7 +62,7 @@ public class MyMeetingsService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.d(TAG, "Polling for new Meeting Ratings...");
-        mRatingServiceManager.loadMyMeetings(mUsername, new Callback<MyMeetingsResponse>() {
+        mRatingServiceManager.loadMyMeetings(mDataStore.getUsername(), new Callback<MyMeetingsResponse>() {
             @Override
             public void success(MyMeetingsResponse meetingResponse, Response response) {
                 Log.d(TAG, "success!");

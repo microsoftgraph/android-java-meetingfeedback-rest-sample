@@ -223,7 +223,7 @@ public class MeetingDetailActivity extends NavigationBarActivity {
                     @Override
                     public void success(Void aVoid, Response response) {
                         //update the webservice with the ratingEvent rating
-                        String eventOwner = event.mOrganizer.emailAddress.mName;
+                        String eventOwner = event.mOrganizer.emailAddress.mAddress;
                         mRatingServiceManager.addRating(eventOwner, sendRatingEvent.mRatingData);
                         EventBus.getDefault().post(new SendRatingSuccessEvent(sendRatingEvent.mRatingData.mEventId));
                     }
