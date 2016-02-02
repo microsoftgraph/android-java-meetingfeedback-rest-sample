@@ -37,7 +37,7 @@ public class RESTHelper {
                     AuthenticationResult authenticationResult = (AuthenticationResult)mAuthenticationManager.authenticateSilent(null).get();
                     request.addHeader("Authorization", "Bearer " + authenticationResult.getAccessToken());
                 } catch (InterruptedException | ExecutionException e) {
-                    EventBus.getDefault().post(new SendRatingFailedEvent(e));
+                    EventBus.getDefault().post(new SendRatingFailedEvent());
                 }
             }
         };
@@ -45,7 +45,7 @@ public class RESTHelper {
         //Sets required properties in rest adaptor class before it is created.
         return new RestAdapter.Builder()
                 .setEndpoint(Constants.MICROSOFT_GRAPH_ENDPOINT)
-                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setLogLevel(RestAdapter.LogLevel.BASIC)
                 .setRequestInterceptor(requestInterceptor)
                 .build();
     }

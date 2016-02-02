@@ -14,11 +14,9 @@ import android.util.Log;
 
 import com.microsoft.office365.meetingfeedback.ConnectActivity;
 import com.microsoft.office365.meetingfeedback.MeetingFeedbackApplication;
-import com.microsoft.office365.meetingfeedback.model.Constants;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 import com.microsoft.office365.meetingfeedback.util.SharedPrefsUtil;
-import com.microsoft.services.orc.resolvers.ADALDependencyResolver;
 
 import java.util.Map;
 
@@ -43,8 +41,6 @@ public class MyMeetingsService extends IntentService {
     RatingServiceManager mRatingServiceManager;
     @Inject
     SharedPrefsUtil mSharedPrefsUtil;
-    @Inject
-    ADALDependencyResolver mADALDependencyResolver;
 
     private String mUsername;
     private Map<String, Double> mSavedMeetingResults;
@@ -63,7 +59,6 @@ public class MyMeetingsService extends IntentService {
         mUsername = mSharedPrefsUtil.getSavedUsername();
         mSavedMeetingResults = mSharedPrefsUtil.getSavedMeetingResults();
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mADALDependencyResolver.setResourceId(Constants.OUTLOOK_RESOURCE_ID);
     }
 
     @Override

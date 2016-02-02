@@ -10,10 +10,10 @@ import android.text.Spanned;
 import android.view.View;
 
 import com.microsoft.office365.meetingfeedback.R;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingServiceResponseData;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 import com.microsoft.office365.meetingfeedback.view.EventsRecyclerViewAdapter;
-import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 
 import java.io.Serializable;
 import java.util.Locale;

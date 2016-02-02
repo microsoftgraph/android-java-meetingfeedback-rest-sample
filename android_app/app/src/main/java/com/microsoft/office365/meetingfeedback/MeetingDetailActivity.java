@@ -23,16 +23,14 @@ import com.microsoft.office365.meetingfeedback.event.SendRatingFailedEvent;
 import com.microsoft.office365.meetingfeedback.event.SendRatingSuccessEvent;
 import com.microsoft.office365.meetingfeedback.event.UserRatingAddedSuccessEvent;
 import com.microsoft.office365.meetingfeedback.event.UserRatingsLoadedSuccessEvent;
-import com.microsoft.office365.meetingfeedback.model.Constants;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventDecorator;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingServiceResponseData;
-import com.microsoft.office365.meetingfeedback.util.EventUtil;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 import com.microsoft.office365.meetingfeedback.view.RatingDialogFragment;
 import com.microsoft.office365.meetingfeedback.view.RatingsRecyclerViewAdapter;
 import com.microsoft.office365.meetingfeedback.view.ShowRatingDialogEvent;
-import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 
 import javax.inject.Inject;
 
@@ -225,14 +223,14 @@ public class MeetingDetailActivity extends NavigationBarActivity {
                     @Override
                     public void success(Void aVoid, Response response) {
                         //update the webservice with the ratingEvent rating
-                        String eventOwner = EventUtil.getEventOwner(event);
+                        String eventOwner = event.mOrganizer.emailAddress.mName;
                         mRatingServiceManager.addRating(eventOwner, sendRatingEvent.mRatingData);
                         EventBus.getDefault().post(new SendRatingSuccessEvent(sendRatingEvent.mRatingData.mEventId));
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        EventBus.getDefault().post(new SendRatingFailedEvent(error));
+                        EventBus.getDefault().post(new SendRatingFailedEvent());
                     }
                 }
         );

@@ -9,7 +9,7 @@ import com.microsoft.office365.meetingfeedback.model.meeting.RatingData;
 public class SendRatingEvent {
     public RatingData mRatingData;
 
-    public SendRatingEvent(String eventOwner, RatingData ratingData) {
+    public SendRatingEvent(RatingData ratingData) {
         mRatingData = ratingData;
     }
 }

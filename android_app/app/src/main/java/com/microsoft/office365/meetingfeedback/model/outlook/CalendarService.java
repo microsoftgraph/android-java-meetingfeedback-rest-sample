@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
-import java.util.concurrent.ExecutionException;
 
 import de.greenrobot.event.EventBus;
 import retrofit.Callback;

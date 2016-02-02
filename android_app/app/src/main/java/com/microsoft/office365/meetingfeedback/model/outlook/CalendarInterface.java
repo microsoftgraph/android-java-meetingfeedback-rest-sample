@@ -4,10 +4,7 @@
  */
 package com.microsoft.office365.meetingfeedback.model.outlook;
 
-import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.EventWrapper;
-
-import java.util.List;
 
 import retrofit.Callback;
 import retrofit.http.GET;

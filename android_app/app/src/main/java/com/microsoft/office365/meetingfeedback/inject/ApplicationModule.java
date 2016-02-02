@@ -6,17 +6,14 @@ package com.microsoft.office365.meetingfeedback.inject;
 
 import com.microsoft.aad.adal.AuthenticationContext;
 import com.microsoft.office365.meetingfeedback.MeetingFeedbackApplication;
-import com.microsoft.office365.meetingfeedback.model.Constants;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationContextBuilder;
-import com.microsoft.office365.meetingfeedback.model.officeclient.ClientManager;
 import com.microsoft.office365.meetingfeedback.model.service.MyMeetingsService;
 import com.microsoft.office365.meetingfeedback.model.service.RatingServiceAlarmManager;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingService;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 import com.microsoft.office365.meetingfeedback.util.ConnectivityUtil;
 import com.microsoft.office365.meetingfeedback.util.SharedPrefsUtil;
-import com.microsoft.services.orc.resolvers.ADALDependencyResolver;
 
 import javax.inject.Singleton;
 
@@ -34,12 +31,6 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    public ADALDependencyResolver providesADALDependencyResolver(AuthenticationContext authContext) {
-        return new ADALDependencyResolver(authContext, Constants.OUTLOOK_RESOURCE_ID, Constants.CLIENT_ID);
-    }
-
-    @Provides
-    @Singleton
     public RatingServiceManager providesRatingServiceManager(DataStore dataStore) {
         return new RatingServiceManager(new RatingService(), dataStore);
     }
@@ -53,14 +44,6 @@ public class ApplicationModule {
     @Singleton
     public DataStore providesDataStore(SharedPrefsUtil sharedPrefsUtil) {
         return new DataStore(sharedPrefsUtil);
-    }
-
-    @Provides
-    @Singleton
-    public ClientManager providesClientManager(DataStore dataStore,
-                                               ADALDependencyResolver resolver,
-                                               RatingServiceManager ratingServiceManager) {
-        return new ClientManager(dataStore, resolver, ratingServiceManager);
     }
 
     @Provides

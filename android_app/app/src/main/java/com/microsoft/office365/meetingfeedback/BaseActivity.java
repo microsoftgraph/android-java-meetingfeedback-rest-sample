@@ -15,7 +15,6 @@ import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationManager;
 import com.microsoft.office365.meetingfeedback.model.outlook.CalendarService;
 import com.microsoft.office365.meetingfeedback.model.outlook.EmailService;
-import com.microsoft.office365.meetingfeedback.model.officeclient.ClientManager;
 import com.microsoft.office365.meetingfeedback.util.ConnectivityUtil;
 import com.microsoft.office365.meetingfeedback.util.DialogUtil;
 import com.microsoft.office365.meetingfeedback.view.RateMyMeetingsDialogFragment;
@@ -33,8 +32,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Inject
     AuthenticationManager mAuthenticationManager;
-    @Inject
-    ClientManager mClientManager;
     @Inject
     CalendarService mCalendarService;
     @Inject

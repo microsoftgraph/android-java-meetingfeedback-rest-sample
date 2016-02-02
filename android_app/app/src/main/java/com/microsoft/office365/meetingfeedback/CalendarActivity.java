@@ -23,20 +23,18 @@ import com.microsoft.office365.meetingfeedback.event.SendRatingEvent;
 import com.microsoft.office365.meetingfeedback.event.SendRatingFailedEvent;
 import com.microsoft.office365.meetingfeedback.event.SendRatingSuccessEvent;
 import com.microsoft.office365.meetingfeedback.event.UserRatingAddedSuccessEvent;
-import com.microsoft.office365.meetingfeedback.model.Constants;
 import com.microsoft.office365.meetingfeedback.model.EventFilter;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventGroup;
-import com.microsoft.office365.meetingfeedback.model.officeclient.CalendarClientManager;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import com.microsoft.office365.meetingfeedback.model.service.MyMeetingsService;
 import com.microsoft.office365.meetingfeedback.model.service.RatingServiceAlarmManager;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
-import com.microsoft.office365.meetingfeedback.util.EventUtil;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 import com.microsoft.office365.meetingfeedback.view.CalendarFragmentPagerAdapter;
 import com.microsoft.office365.meetingfeedback.view.CalendarRangeFragment;
 import com.microsoft.office365.meetingfeedback.view.RatingDialogFragment;
 import com.microsoft.office365.meetingfeedback.view.ShowRatingDialogEvent;
-import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
+
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
@@ -52,8 +50,6 @@ public class CalendarActivity extends NavigationBarActivity {
     private CalendarFragmentPagerAdapter mAdapter;
     private CalendarRangeFragment mCalendarRangeFragment;
     private int mPage;
-    private CalendarClientManager mOutlookClientManager;
-
 
     @Inject
     RatingServiceManager mRatingServiceManager;
@@ -83,7 +79,6 @@ public class CalendarActivity extends NavigationBarActivity {
         super.onCreate(savedInstanceState);
 
         mCalendarViewPager = (ViewPager) findViewById(R.id.activity_calendar_viewpager);
-        mOutlookClientManager = mClientManager.getCalendarClientManager();
         meetingToLoad = getIntent().getStringExtra(MyMeetingsService.EVENT_ID);
         mSpinner = (Spinner) findViewById(R.id.activity_calendar_select_role);
         mSpinnerAdapter = ArrayAdapter.createFromResource(this,
@@ -232,14 +227,14 @@ public class CalendarActivity extends NavigationBarActivity {
                     @Override
                     public void success(Void aVoid, Response response) {
                         //update the webservice with the ratingEvent rating
-                        String eventOwner = EventUtil.getEventOwner(event);
+                        String eventOwner = event.mOrganizer.emailAddress.mName;
                         mRatingServiceManager.addRating(eventOwner, sendRatingEvent.mRatingData);
                         EventBus.getDefault().post(new SendRatingSuccessEvent(sendRatingEvent.mRatingData.mEventId));
                     }
 
                     @Override
                     public void failure(RetrofitError error) {
-                        EventBus.getDefault().post(new SendRatingFailedEvent(error));
+                        EventBus.getDefault().post(new SendRatingFailedEvent());
                     }
                 }
         );

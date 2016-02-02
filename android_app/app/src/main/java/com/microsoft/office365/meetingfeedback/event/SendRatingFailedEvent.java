@@ -5,9 +5,4 @@
 package com.microsoft.office365.meetingfeedback.event;
 
 public class SendRatingFailedEvent {
-    private Exception mException;
-
-    public SendRatingFailedEvent(Exception e) {
-        mException = e;
-    }
 }

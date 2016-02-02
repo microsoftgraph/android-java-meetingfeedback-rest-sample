@@ -68,7 +68,7 @@ public class RatingDialogFragment extends BaseDialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String eventOwner = mEvent.mOrganizer.emailAddress.mName;
-                        EventBus.getDefault().post(new SendRatingEvent(eventOwner, buildRatingData()));
+                        EventBus.getDefault().post(new SendRatingEvent(buildRatingData()));
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null);
