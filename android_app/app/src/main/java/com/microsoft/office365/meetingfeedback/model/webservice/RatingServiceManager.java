@@ -54,7 +54,6 @@ public class RatingServiceManager {
         });
     }
 
-    //TODO: This function could probably just receive the eventId
     public void loadRatingFromWebservice(String eventId, String owner) {
         mRatingService.getMeetingAsync(eventId, mDataStore.getUsername(), owner, new Callback<MeetingServiceResponseData>() {
             @Override
