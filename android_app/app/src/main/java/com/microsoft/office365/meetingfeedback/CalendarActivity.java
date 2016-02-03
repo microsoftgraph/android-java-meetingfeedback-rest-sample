@@ -56,7 +56,6 @@ public class CalendarActivity extends NavigationBarActivity {
     RatingServiceManager mRatingServiceManager;
     @Inject
     RatingServiceAlarmManager mRatingServiceAlarmManager;
-    private String meetingToLoad;
 
     private Spinner mSpinner;
     private ArrayAdapter mSpinnerAdapter;
@@ -67,18 +66,10 @@ public class CalendarActivity extends NavigationBarActivity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        meetingToLoad = intent.getStringExtra(MyMeetingsService.EVENT_ID);
-        System.out.println("-->" + meetingToLoad);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mCalendarViewPager = (ViewPager) findViewById(R.id.activity_calendar_viewpager);
-        meetingToLoad = getIntent().getStringExtra(MyMeetingsService.EVENT_ID);
         mSpinner = (Spinner) findViewById(R.id.activity_calendar_select_role);
         mSpinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.meeting_filter_spinner_options,
@@ -139,7 +130,6 @@ public class CalendarActivity extends NavigationBarActivity {
         mDialogUtil.showProgressDialog(this, R.string.calendar_events, R.string.calendar_events_loading);
 
         mCalendarService.fetchEvents();
-        //mOutlookClientManager.fetchEvents();
         mRatingServiceManager.loadRatingsFromWebservice();
     }
 
@@ -184,17 +174,8 @@ public class CalendarActivity extends NavigationBarActivity {
     public void onEvent(LoadCalendarSuccessEvent event) {
         mDialogUtil.dismissDialog(this);
         setupViewPagerAdapter();
-        if (meetingToLoad != null) {
-            startupMeetingFromId();
-        }
         mCalendarRangeFragment.setup();
         setPage(mPage);
-    }
-
-    private void startupMeetingFromId() {
-        Intent i = new Intent(CalendarActivity.this, MeetingDetailActivity.class);
-        i.putExtra(MeetingDetailActivity.EVENT_ID_EXTRA, meetingToLoad);
-        startActivity(i);
     }
 
     public void onEvent(ShowRatingDialogEvent event) {
