@@ -108,7 +108,7 @@ public class MyMeetingsService extends IntentService {
         Intent intent = new Intent(this, MeetingDetailActivity.class);
         intent.putExtra(MeetingDetailActivity.EVENT_ID_EXTRA, id);
 
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setContentIntent(pIntent);
         mNotificationManager.notify(0, builder.build());
     }
