@@ -9,7 +9,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,7 +26,6 @@ import com.microsoft.office365.meetingfeedback.model.meeting.EventDecorator;
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingServiceResponseData;
-import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 import com.microsoft.office365.meetingfeedback.view.RatingDialogFragment;
 import com.microsoft.office365.meetingfeedback.view.RatingsRecyclerViewAdapter;
 import com.microsoft.office365.meetingfeedback.view.ShowRatingDialogEvent;
@@ -35,9 +33,6 @@ import com.microsoft.office365.meetingfeedback.view.ShowRatingDialogEvent;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class MeetingDetailActivity extends NavigationBarActivity {
 
@@ -204,41 +199,22 @@ public class MeetingDetailActivity extends NavigationBarActivity {
     }
 
     public void onEvent(final SendRatingEvent sendRatingEvent) {
-        mDialogUtil.showProgressDialog(this, getString(R.string.submit_rating), getString(R.string.submitting_rating_description));
+        mDialogUtil.showProgressDialog(
+                this,
+                getString(R.string.submit_rating),
+                getString(R.string.submitting_rating_description)
+        );
 
         final Event event = mDataStore.getEventById(sendRatingEvent.mRatingData.mEventId);
-        String subject = String.format(
-                "Your meeting, %s, on %s (%s) , was recently reviewed. \n\n",
-                event.mSubject,
-                FormatUtil.displayFormattedEventDate(event),
-                FormatUtil.displayFormattedEventTime(event));
-        StringBuilder stringBuilder = new StringBuilder();
-        String eventDate = FormatUtil.displayFormattedEventDate(event);
-        String eventTime = FormatUtil.displayFormattedEventTime(event);
-        stringBuilder.append(String.format("Your meeting, %s, on %s (%s) , was recently reviewed. \n\n", event.mSubject, eventDate, eventTime));
-        stringBuilder.append(String.format("Rating: %s \n", sendRatingEvent.mRatingData.mRating));
-        String remarks = TextUtils.isEmpty(sendRatingEvent.mRatingData.mReview) ? "No Remarks." : sendRatingEvent.mRatingData.mReview;
-        stringBuilder.append(String.format("Remarks/How to improve: %s", remarks));
-        String body = stringBuilder.toString();
 
-        mEmailService.sendMail(
+        mEmailService.sendRatingMail(
+                event,
+                sendRatingEvent.mRatingData
+        );
+
+        mRatingServiceManager.addRating(
                 event.mOrganizer.emailAddress.mAddress,
-                subject,
-                body,
-                new Callback<Void>() {
-                    @Override
-                    public void success(Void aVoid, Response response) {
-                        //update the webservice with the ratingEvent rating
-                        String eventOwner = event.mOrganizer.emailAddress.mAddress;
-                        mRatingServiceManager.addRating(eventOwner, sendRatingEvent.mRatingData);
-                        EventBus.getDefault().post(new SendRatingSuccessEvent(sendRatingEvent.mRatingData.mEventId));
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        EventBus.getDefault().post(new SendRatingFailedEvent());
-                    }
-                }
+                sendRatingEvent.mRatingData
         );
     }
 

@@ -4,19 +4,29 @@
  */
 package com.microsoft.office365.meetingfeedback.model.outlook;
 
+import android.text.TextUtils;
+
+import com.microsoft.office365.meetingfeedback.event.SendRatingFailedEvent;
+import com.microsoft.office365.meetingfeedback.event.SendRatingSuccessEvent;
 import com.microsoft.office365.meetingfeedback.model.Constants;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationManager;
+import com.microsoft.office365.meetingfeedback.model.meeting.RatingData;
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.Body;
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.EmailAddress;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.From;
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.Message;
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.MessageWrapper;
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.Sender;
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.ToRecipient;
 import com.microsoft.office365.meetingfeedback.model.request.RESTHelper;
+import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 
+import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Handles the creation of the message and contacting the
@@ -38,23 +48,34 @@ public class EmailService {
      * Sends an email message using the Microsoft Graph API on Office 365. The mail is sent
      * from the address of the signed in user.
      *
-     * @param subject      The subject to use in the mail message.
-     * @param body         The body of the message.
-     * @param callback     UI callback to be invoked by Retrofit call when
-     *                     operation completed
+     * @param event      Details about the event.
+     * @param ratingData Details about the rating (rate and comments).
      */
-    public void sendMail(
-            final String recipient,
-            final String subject,
-            final String body,
-            Callback<Void> callback) {
+    public void sendRatingMail (
+            final Event event,
+            final RatingData ratingData) {
+
         // create the email
-        MessageWrapper msg = createMailPayload(subject, body, recipient);
+        MessageWrapper msg = createMailPayload(
+                formatSubject(event),
+                formatBody(event, ratingData),
+                event.mOrganizer.emailAddress.mAddress
+        );
 
         // send it using our service
-        mEmailClient.sendMail("application/json", msg, callback);
-    }
+        mEmailClient.sendMail("application/json", msg, new Callback<Void>() {
+            @Override
+            public void success(Void aVoid, Response response) {
+                //update the webservice with the ratingEvent rating
+                EventBus.getDefault().post(new SendRatingSuccessEvent(ratingData.mEventId));
+            }
 
+            @Override
+            public void failure(RetrofitError error) {
+                EventBus.getDefault().post(new SendRatingFailedEvent());
+            }
+        });
+    }
 
     private MessageWrapper createMailPayload(
             String subject,
@@ -88,4 +109,22 @@ public class EmailService {
         return new MessageWrapper(sampleMsg);
     }
 
+    private String formatSubject(Event event) {
+        return String.format(
+                "Your meeting, %s, on %s (%s) , was recently reviewed.",
+                event.mSubject,
+                FormatUtil.displayFormattedEventDate(event),
+                FormatUtil.displayFormattedEventTime(event));
+    }
+
+    private String formatBody(Event event, RatingData ratingData) {
+        StringBuilder stringBuilder = new StringBuilder();
+        String eventDate = FormatUtil.displayFormattedEventDate(event);
+        String eventTime = FormatUtil.displayFormattedEventTime(event);
+        stringBuilder.append(String.format("<div>Your meeting, %s, on %s (%s) , was recently reviewed.</div>", event.mSubject, eventDate, eventTime));
+        stringBuilder.append(String.format("<div>Rating: %s </div>", ratingData.mRating));
+        String remarks = TextUtils.isEmpty(ratingData.mReview) ? "No Remarks." : ratingData.mReview;
+        stringBuilder.append(String.format("<div>Remarks/How to improve: %s</div>", remarks));
+        return stringBuilder.toString();
+    }
 }
