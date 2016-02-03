@@ -222,7 +222,7 @@ public class MeetingDetailActivity extends NavigationBarActivity {
         String body = stringBuilder.toString();
 
         mEmailService.sendMail(
-                event.mOrganizer.emailAddress.mName,
+                event.mOrganizer.emailAddress.mAddress,
                 subject,
                 body,
                 new Callback<Void>() {
