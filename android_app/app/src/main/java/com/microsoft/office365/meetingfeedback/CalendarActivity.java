@@ -4,7 +4,6 @@
  */
 package com.microsoft.office365.meetingfeedback;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
@@ -26,7 +25,6 @@ import com.microsoft.office365.meetingfeedback.event.UserRatingAddedSuccessEvent
 import com.microsoft.office365.meetingfeedback.model.EventFilter;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventGroup;
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
-import com.microsoft.office365.meetingfeedback.model.service.MyMeetingsService;
 import com.microsoft.office365.meetingfeedback.model.service.RatingServiceAlarmManager;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;

@@ -12,11 +12,8 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.microsoft.office365.meetingfeedback.ConnectActivity;
 import com.microsoft.office365.meetingfeedback.MeetingDetailActivity;
 import com.microsoft.office365.meetingfeedback.MeetingFeedbackApplication;
-import com.microsoft.office365.meetingfeedback.event.UserRatingsLoadedFailEvent;
-import com.microsoft.office365.meetingfeedback.event.UserRatingsLoadedSuccessEvent;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 import com.microsoft.office365.meetingfeedback.util.SharedPrefsUtil;
@@ -26,7 +23,6 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import dagger.ObjectGraph;
-import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;

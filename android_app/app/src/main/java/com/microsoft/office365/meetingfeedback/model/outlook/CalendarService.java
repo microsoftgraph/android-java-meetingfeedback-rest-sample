@@ -14,7 +14,6 @@ import com.microsoft.office365.meetingfeedback.model.outlook.payload.EventWrappe
 import com.microsoft.office365.meetingfeedback.model.request.RESTHelper;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
