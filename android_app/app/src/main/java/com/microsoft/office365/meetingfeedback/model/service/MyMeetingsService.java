@@ -13,6 +13,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.microsoft.office365.meetingfeedback.ConnectActivity;
+import com.microsoft.office365.meetingfeedback.MeetingDetailActivity;
 import com.microsoft.office365.meetingfeedback.MeetingFeedbackApplication;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
@@ -99,8 +100,8 @@ public class MyMeetingsService extends IntentService {
                 .setAutoCancel(true)
                 .setContentTitle("New Rating Received!")
                 .setContentText("Your meeting has received a new rating. Click to view");
-        Intent intent = new Intent(this, ConnectActivity.class);
-        intent.putExtra(EVENT_ID, id);
+        Intent intent = new Intent(this, MeetingDetailActivity.class);
+        intent.putExtra(MeetingDetailActivity.EVENT_ID_EXTRA, id);
 
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
         builder.setContentIntent(pIntent);
