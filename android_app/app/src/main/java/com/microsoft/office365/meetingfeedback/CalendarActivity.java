@@ -45,6 +45,7 @@ import retrofit.client.Response;
 public class CalendarActivity extends NavigationBarActivity {
 
     private static final String TAG = "CalendarActivity";
+    public static final String MY_MEETINGS = "My Meetings";
 
     private ViewPager mCalendarViewPager;
     private CalendarFragmentPagerAdapter mAdapter;
@@ -55,12 +56,9 @@ public class CalendarActivity extends NavigationBarActivity {
     RatingServiceManager mRatingServiceManager;
     @Inject
     RatingServiceAlarmManager mRatingServiceAlarmManager;
-    private String meetingToLoad;
 
     private Spinner mSpinner;
     private ArrayAdapter mSpinnerAdapter;
-    //todo: move
-    public static final String MY_MEETINGS = "My Meetings";
 
     @Override
     protected int getActivityLayoutId() {
@@ -68,18 +66,10 @@ public class CalendarActivity extends NavigationBarActivity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        meetingToLoad = intent.getStringExtra(MyMeetingsService.EVENT_ID);
-        System.out.println("-->" + meetingToLoad);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mCalendarViewPager = (ViewPager) findViewById(R.id.activity_calendar_viewpager);
-        meetingToLoad = getIntent().getStringExtra(MyMeetingsService.EVENT_ID);
         mSpinner = (Spinner) findViewById(R.id.activity_calendar_select_role);
         mSpinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.meeting_filter_spinner_options,
@@ -106,7 +96,7 @@ public class CalendarActivity extends NavigationBarActivity {
             public void onPageSelected(int position) {
                 mPage = position;
                 setPage(mPage);
-                mCalendarRangeFragment.setActivePage(position);
+                mCalendarRangeFragment.setActivePage(mPage);
             }
 
             @Override
@@ -140,7 +130,6 @@ public class CalendarActivity extends NavigationBarActivity {
         mDialogUtil.showProgressDialog(this, R.string.calendar_events, R.string.calendar_events_loading);
 
         mCalendarService.fetchEvents();
-        //mOutlookClientManager.fetchEvents();
         mRatingServiceManager.loadRatingsFromWebservice();
     }
 
@@ -185,16 +174,8 @@ public class CalendarActivity extends NavigationBarActivity {
     public void onEvent(LoadCalendarSuccessEvent event) {
         mDialogUtil.dismissDialog(this);
         setupViewPagerAdapter();
-        if (meetingToLoad != null) {
-            startupMeetingFromId();
-        }
         mCalendarRangeFragment.setup();
-    }
-
-    private void startupMeetingFromId() {
-        Intent i = new Intent(CalendarActivity.this, MeetingDetailActivity.class);
-        i.putExtra(MeetingDetailActivity.EVENT_ID_EXTRA, meetingToLoad);
-        startActivity(i);
+        setPage(mPage);
     }
 
     public void onEvent(ShowRatingDialogEvent event) {
@@ -227,7 +208,7 @@ public class CalendarActivity extends NavigationBarActivity {
                     @Override
                     public void success(Void aVoid, Response response) {
                         //update the webservice with the ratingEvent rating
-                        String eventOwner = event.mOrganizer.emailAddress.mName;
+                        String eventOwner = event.mOrganizer.emailAddress.mAddress;
                         mRatingServiceManager.addRating(eventOwner, sendRatingEvent.mRatingData);
                         EventBus.getDefault().post(new SendRatingSuccessEvent(sendRatingEvent.mRatingData.mEventId));
                     }

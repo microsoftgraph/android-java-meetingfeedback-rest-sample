@@ -30,7 +30,7 @@ public class CalendarService {
 
     private CalendarInterface mCalendarClient;
     private DataStore mDataStore;
-    private List<Event> mAccumulatedEvents = new ArrayList<>();
+    private List<Event> mAccumulatedEvents;
 
     public CalendarService(AuthenticationManager authenticationManager, DataStore dataStore) {
         mDataStore = dataStore;
@@ -42,6 +42,7 @@ public class CalendarService {
         getEvents(new Callback<EventWrapper>() {
             @Override
             public void success(EventWrapper eventWrapper, Response response) {
+                mAccumulatedEvents = new ArrayList<>();
                 mAccumulatedEvents.addAll((eventWrapper.mEvents));
                 mDataStore.setEvents(mAccumulatedEvents);
                 EventBus.getDefault().post(new LoadCalendarSuccessEvent());

@@ -26,7 +26,7 @@ public interface RatingServiceInterface {
     void postRatingAsync(@Query("username") String username, @Query("owner") String owner, @Body CreateRatingRequest requestData, Callback<MeetingServiceResponseData> callback);
 
     @GET("/meetings/{id}")
-    void getMeetingAsync(@Path("id") String eventId, @Query("username") String username, @Query("owner") String owner, Callback<MeetingServiceResponseData> callback);
+    void getMeetingAsync(@Path("id") String eventId, Callback<MeetingServiceResponseData> callback);
 
     @GET("/mymeetings")
     void getMyMeetingsAsync(@Query("username") String username, Callback<MyMeetingsResponse> callback);

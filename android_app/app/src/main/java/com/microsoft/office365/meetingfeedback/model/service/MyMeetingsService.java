@@ -13,7 +13,10 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.microsoft.office365.meetingfeedback.ConnectActivity;
+import com.microsoft.office365.meetingfeedback.MeetingDetailActivity;
 import com.microsoft.office365.meetingfeedback.MeetingFeedbackApplication;
+import com.microsoft.office365.meetingfeedback.event.UserRatingsLoadedFailEvent;
+import com.microsoft.office365.meetingfeedback.event.UserRatingsLoadedSuccessEvent;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 import com.microsoft.office365.meetingfeedback.util.SharedPrefsUtil;
@@ -23,6 +26,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import dagger.ObjectGraph;
+import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -42,7 +46,6 @@ public class MyMeetingsService extends IntentService {
     @Inject
     SharedPrefsUtil mSharedPrefsUtil;
 
-    private String mUsername;
     private Map<String, Double> mSavedMeetingResults;
     private NotificationManager mNotificationManager;
 
@@ -56,7 +59,6 @@ public class MyMeetingsService extends IntentService {
         MeetingFeedbackApplication application = (MeetingFeedbackApplication) getApplication();
         applicationGraph = application.getApplicationGraph();
         applicationGraph.inject(this);
-        mUsername = mSharedPrefsUtil.getSavedUsername();
         mSavedMeetingResults = mSharedPrefsUtil.getSavedMeetingResults();
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
     }
@@ -64,7 +66,7 @@ public class MyMeetingsService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.d(TAG, "Polling for new Meeting Ratings...");
-        mRatingServiceManager.loadMyMeetings(mUsername, new Callback<MyMeetingsResponse>() {
+        mRatingServiceManager.loadMyMeetings(mDataStore.getUsername(), new Callback<MyMeetingsResponse>() {
             @Override
             public void success(MyMeetingsResponse meetingResponse, Response response) {
                 Log.d(TAG, "success!");
@@ -76,11 +78,13 @@ public class MyMeetingsService extends IntentService {
                     //if old meeting response didnt have the key
                     if (!mSavedMeetingResults.containsKey(id)) {
                         Log.d(TAG, "RATING COUNT CHANGED! Send a notification for " + id + "!");
+                        mRatingServiceManager.loadRatingFromWebservice(id, "");
                         sendNotificationForEvent(id);
                     }
                     if (savedCountForMeeting != null && newCountForMeeting != null
                             && !savedCountForMeeting.equals(newCountForMeeting)) {
                         Log.d(TAG, "RATING COUNT CHANGED! Send a notification for " + id + " !");
+                        mRatingServiceManager.loadRatingFromWebservice(id, "");
                         sendNotificationForEvent(id);
                     }
                 }
@@ -101,8 +105,8 @@ public class MyMeetingsService extends IntentService {
                 .setAutoCancel(true)
                 .setContentTitle("New Rating Received!")
                 .setContentText("Your meeting has received a new rating. Click to view");
-        Intent intent = new Intent(this, ConnectActivity.class);
-        intent.putExtra(EVENT_ID, id);
+        Intent intent = new Intent(this, MeetingDetailActivity.class);
+        intent.putExtra(MeetingDetailActivity.EVENT_ID_EXTRA, id);
 
         PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
         builder.setContentIntent(pIntent);

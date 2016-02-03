@@ -53,8 +53,8 @@ public class RatingService implements RatingServiceInterface {
     }
 
     @Override
-    public void getMeetingAsync(String eventId, String username, String owner, Callback<MeetingServiceResponseData> callback) {
-        mRatingServiceInterface.getMeetingAsync(eventId, username, owner, callback);
+    public void getMeetingAsync(String eventId, Callback<MeetingServiceResponseData> callback) {
+        mRatingServiceInterface.getMeetingAsync(eventId, callback);
     }
 
     @Override
