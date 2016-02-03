@@ -45,6 +45,7 @@ import retrofit.client.Response;
 public class CalendarActivity extends NavigationBarActivity {
 
     private static final String TAG = "CalendarActivity";
+    public static final String MY_MEETINGS = "My Meetings";
 
     private ViewPager mCalendarViewPager;
     private CalendarFragmentPagerAdapter mAdapter;
@@ -59,8 +60,6 @@ public class CalendarActivity extends NavigationBarActivity {
 
     private Spinner mSpinner;
     private ArrayAdapter mSpinnerAdapter;
-    //todo: move
-    public static final String MY_MEETINGS = "My Meetings";
 
     @Override
     protected int getActivityLayoutId() {
@@ -106,7 +105,7 @@ public class CalendarActivity extends NavigationBarActivity {
             public void onPageSelected(int position) {
                 mPage = position;
                 setPage(mPage);
-                mCalendarRangeFragment.setActivePage(position);
+                mCalendarRangeFragment.setActivePage(mPage);
             }
 
             @Override
@@ -189,6 +188,7 @@ public class CalendarActivity extends NavigationBarActivity {
             startupMeetingFromId();
         }
         mCalendarRangeFragment.setup();
+        setPage(mPage);
     }
 
     private void startupMeetingFromId() {
