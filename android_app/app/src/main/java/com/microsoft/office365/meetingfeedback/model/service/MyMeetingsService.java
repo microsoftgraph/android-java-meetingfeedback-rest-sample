@@ -15,6 +15,8 @@ import android.util.Log;
 import com.microsoft.office365.meetingfeedback.ConnectActivity;
 import com.microsoft.office365.meetingfeedback.MeetingDetailActivity;
 import com.microsoft.office365.meetingfeedback.MeetingFeedbackApplication;
+import com.microsoft.office365.meetingfeedback.event.UserRatingsLoadedFailEvent;
+import com.microsoft.office365.meetingfeedback.event.UserRatingsLoadedSuccessEvent;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 import com.microsoft.office365.meetingfeedback.util.SharedPrefsUtil;
@@ -24,6 +26,7 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import dagger.ObjectGraph;
+import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -75,11 +78,13 @@ public class MyMeetingsService extends IntentService {
                     //if old meeting response didnt have the key
                     if (!mSavedMeetingResults.containsKey(id)) {
                         Log.d(TAG, "RATING COUNT CHANGED! Send a notification for " + id + "!");
+                        mRatingServiceManager.loadRatingFromWebservice(id, "");
                         sendNotificationForEvent(id);
                     }
                     if (savedCountForMeeting != null && newCountForMeeting != null
                             && !savedCountForMeeting.equals(newCountForMeeting)) {
                         Log.d(TAG, "RATING COUNT CHANGED! Send a notification for " + id + " !");
+                        mRatingServiceManager.loadRatingFromWebservice(id, "");
                         sendNotificationForEvent(id);
                     }
                 }

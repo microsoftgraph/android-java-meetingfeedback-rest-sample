@@ -139,7 +139,6 @@ public class CalendarActivity extends NavigationBarActivity {
         mDialogUtil.showProgressDialog(this, R.string.calendar_events, R.string.calendar_events_loading);
 
         mCalendarService.fetchEvents();
-        //mOutlookClientManager.fetchEvents();
         mRatingServiceManager.loadRatingsFromWebservice();
     }
 
