@@ -193,6 +193,12 @@ public class MeetingDetailActivity extends NavigationBarActivity {
         mDialogUtil.dismissDialog(this);
     }
 
+    public void onEvent(SendRatingFailedEvent event) {
+        Log.e(TAG, "SendRatingFailedEvent received :(");
+        mDialogUtil.dismissDialog(this);
+        mDialogUtil.showAlertDialog(this, getString(R.string.failure_title), getString(R.string.send_rating_failed_exception));
+    }
+
     public void onEvent(ShowRatingDialogEvent event) {
         RatingDialogFragment.newInstance(event.mEventId).show(getSupportFragmentManager(), RATING_DIALOG_FRAGMENT_TAG);
     }
