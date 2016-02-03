@@ -110,6 +110,6 @@ public class RatingServiceManager {
     }
 
     public void loadRatingFromWebservice(Event event) {
-        loadRatingFromWebservice(event.mICalUId, event.mOrganizer.emailAddress.mName);
+        loadRatingFromWebservice(event.mICalUId, event.mOrganizer.emailAddress.mAddress);
     }
 }
