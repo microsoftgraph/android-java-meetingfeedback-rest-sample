@@ -59,7 +59,6 @@ public class CalendarService {
         DateRange dateRange = getDateRange();
         String startDateTime = FormatUtil.convertDateToUrlString(dateRange.mStart.getTime());
         String endDateTime = FormatUtil.convertDateToUrlString(dateRange.mEnd.getTime());
-        SimpleDateFormat format = new SimpleDateFormat("");
         String preferredTimezone = "outlook.timezone=\"" + TimeZone.getDefault().getID() + "\"";
         mCalendarClient.getEvents("application/json", preferredTimezone, startDateTime, endDateTime, callback);
     }

@@ -10,9 +10,7 @@ import java.util.List;
 
 public class EventWrapper {
 
-    @SerializedName("@odata.context")
-    public String mODataContext;
-
     @SerializedName("value")
     public List<Event> mEvents;
+
 }
