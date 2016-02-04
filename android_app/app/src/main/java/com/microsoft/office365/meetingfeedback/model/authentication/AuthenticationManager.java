@@ -87,18 +87,12 @@ public class AuthenticationManager {
                 new AuthenticationCallback<AuthenticationResult>() {
                     @Override
                     public void onSuccess(final AuthenticationResult authenticationResult) {
-                        if (authenticationResult != null && authenticationResult.getStatus() == AuthenticationStatus.Succeeded) {
-                            if(null == mDataStore.getUser()) {
-                                User user = new User(authenticationResult.getUserInfo());
-                                mDataStore.setUser(user);
-                            }
-                            if(null != authenticationCallback) {
-                                authenticationCallback.onSuccess(authenticationResult);
-                            }
-                        } else if (null != authenticationResult) {
-                            // I could not authenticate the user silently,
-                            // falling back to prompt the user for credentials.
-                            authenticatePrompt(authenticationCallback);
+                        if(null == mDataStore.getUser()) {
+                            User user = new User(authenticationResult.getUserInfo());
+                            mDataStore.setUser(user);
+                        }
+                        if(null != authenticationCallback) {
+                            authenticationCallback.onSuccess(authenticationResult);
                         }
                     }
 
@@ -127,25 +121,10 @@ public class AuthenticationManager {
                 new AuthenticationCallback<AuthenticationResult>() {
                     @Override
                     public void onSuccess(final AuthenticationResult authenticationResult) {
-                        if (authenticationResult != null && authenticationResult.getStatus() == AuthenticationStatus.Succeeded) {
-                            User user = new User(authenticationResult.getUserInfo());
-                            mDataStore.setUser(user);
-                            if(null != authenticationCallback) {
-                                authenticationCallback.onSuccess(authenticationResult);
-                            }
-                        } else if (authenticationResult != null) {
-                            // We need to make sure that there is no data stored with the failed auth
-                            signout();
-                            // This condition can happen if user signs in with an MSA account
-                            // instead of an Office 365 account
-                            if(null != authenticationCallback) {
-                                authenticationCallback.onError(
-                                        new AuthenticationException(
-                                                ADALError.AUTH_FAILED,
-                                                authenticationResult.getErrorDescription()
-                                        )
-                                );
-                            }
+                        User user = new User(authenticationResult.getUserInfo());
+                        mDataStore.setUser(user);
+                        if(null != authenticationCallback) {
+                            authenticationCallback.onSuccess(authenticationResult);
                         }
                     }
 
