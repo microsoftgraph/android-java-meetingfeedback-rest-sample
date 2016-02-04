@@ -14,6 +14,8 @@ import com.microsoft.office365.meetingfeedback.model.outlook.payload.EventWrappe
 import com.microsoft.office365.meetingfeedback.model.request.RESTHelper;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -59,7 +61,17 @@ public class CalendarService {
         String startDateTime = FormatUtil.convertDateToUrlString(dateRange.mStart.getTime());
         String endDateTime = FormatUtil.convertDateToUrlString(dateRange.mEnd.getTime());
         String preferredTimezone = "outlook.timezone=\"" + TimeZone.getDefault().getID() + "\"";
-        mCalendarClient.getEvents("application/json", preferredTimezone, startDateTime, endDateTime, callback);
+
+        mCalendarClient.getEvents(
+                "application/json",
+                preferredTimezone,
+                startDateTime,
+                endDateTime,
+                "subject,start,end,organizer,isOrganizer,attendees,bodyPreview,iCalUID",
+                "start/datetime desc",
+                "150",
+                callback
+        );
     }
 
     private DateRange getDateRange() {

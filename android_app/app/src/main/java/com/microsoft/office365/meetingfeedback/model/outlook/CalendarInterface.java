@@ -12,11 +12,15 @@ import retrofit.http.Header;
 import retrofit.http.Query;
 
 public interface CalendarInterface {
-    @GET("/me/calendarview?&$select=subject,start,end,organizer,isOrganizer,attendees,bodyPreview,iCalUID&$orderby=start%2Fdatetime%20desc&$top=150")
+    @GET("/me/calendarview")
     void getEvents(
             @Header("Content-type") String contentTypeHeader,
             @Header("Prefer") String preferHeader,
             @Query("startdatetime") String startDateTime,
             @Query("enddatetime") String endDateTime,
-            Callback<EventWrapper> callback);
+            @Query("$select") String select,
+            @Query("$orderby") String orderBy,
+            @Query("$top") String top,
+            Callback<EventWrapper> callback
+    );
 }
