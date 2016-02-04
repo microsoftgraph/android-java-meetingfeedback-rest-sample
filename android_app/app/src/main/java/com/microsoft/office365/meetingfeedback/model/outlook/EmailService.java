@@ -6,8 +6,6 @@ package com.microsoft.office365.meetingfeedback.model.outlook;
 
 import android.text.TextUtils;
 
-import com.microsoft.office365.meetingfeedback.event.SendRatingFailedEvent;
-import com.microsoft.office365.meetingfeedback.event.SendRatingSuccessEvent;
 import com.microsoft.office365.meetingfeedback.model.Constants;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationManager;
 import com.microsoft.office365.meetingfeedback.model.meeting.RatingData;
@@ -22,11 +20,8 @@ import com.microsoft.office365.meetingfeedback.model.outlook.payload.ToRecipient
 import com.microsoft.office365.meetingfeedback.model.request.RESTHelper;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 
-import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 /**
  * Handles the creation of the message and contacting the

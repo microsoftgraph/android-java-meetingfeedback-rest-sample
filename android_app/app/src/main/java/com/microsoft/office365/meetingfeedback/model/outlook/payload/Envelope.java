@@ -8,9 +8,9 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class EventWrapper {
+public class Envelope<T> {
 
     @SerializedName("value")
-    public List<Event> mEvents;
+    public List<T> mValues;
 
 }

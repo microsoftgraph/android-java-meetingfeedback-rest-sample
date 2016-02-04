@@ -9,13 +9,11 @@ import com.microsoft.office365.meetingfeedback.event.LoadCalendarSuccessEvent;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationManager;
 import com.microsoft.office365.meetingfeedback.model.meeting.DateRange;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Envelope;
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
-import com.microsoft.office365.meetingfeedback.model.outlook.payload.EventWrapper;
 import com.microsoft.office365.meetingfeedback.model.request.RESTHelper;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -40,11 +38,11 @@ public class CalendarService {
     }
 
     public void fetchEvents() {
-        getEvents(new Callback<EventWrapper>() {
+        getEvents(new Callback<Envelope>() {
             @Override
-            public void success(EventWrapper eventWrapper, Response response) {
+            public void success(Envelope envelope, Response response) {
                 mAccumulatedEvents = new ArrayList<>();
-                mAccumulatedEvents.addAll((eventWrapper.mEvents));
+                mAccumulatedEvents.addAll((envelope.mValues));
                 mDataStore.setEvents(mAccumulatedEvents);
                 EventBus.getDefault().post(new LoadCalendarSuccessEvent());
             }
@@ -56,7 +54,7 @@ public class CalendarService {
         });
     }
 
-    private void getEvents(Callback<EventWrapper> callback) {
+    private void getEvents(Callback<Envelope> callback) {
         DateRange dateRange = getDateRange();
         String startDateTime = FormatUtil.convertDateToUrlString(dateRange.mStart.getTime());
         String endDateTime = FormatUtil.convertDateToUrlString(dateRange.mEnd.getTime());

@@ -6,20 +6,16 @@ package com.microsoft.office365.meetingfeedback;
 
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import com.microsoft.office365.meetingfeedback.event.LoadCalendarFailedEvent;
 import com.microsoft.office365.meetingfeedback.event.LoadCalendarSuccessEvent;
 import com.microsoft.office365.meetingfeedback.event.PageChangeEvent;
 import com.microsoft.office365.meetingfeedback.event.RefreshCalendarDataEvent;
 import com.microsoft.office365.meetingfeedback.event.SendRatingEvent;
-import com.microsoft.office365.meetingfeedback.event.SendRatingFailedEvent;
-import com.microsoft.office365.meetingfeedback.event.SendRatingSuccessEvent;
 import com.microsoft.office365.meetingfeedback.event.UserRatingAddedSuccessEvent;
 import com.microsoft.office365.meetingfeedback.model.EventFilter;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventGroup;
@@ -32,11 +28,6 @@ import com.microsoft.office365.meetingfeedback.view.RatingDialogFragment;
 import com.microsoft.office365.meetingfeedback.view.ShowRatingDialogEvent;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
-import retrofit.Callback;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 
 public class CalendarActivity extends NavigationBarActivity {
 
