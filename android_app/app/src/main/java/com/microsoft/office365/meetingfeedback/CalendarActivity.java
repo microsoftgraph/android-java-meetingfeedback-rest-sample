@@ -33,6 +33,11 @@ import com.microsoft.office365.meetingfeedback.view.ShowRatingDialogEvent;
 
 import javax.inject.Inject;
 
+import de.greenrobot.event.EventBus;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 public class CalendarActivity extends NavigationBarActivity {
 
     private static final String TAG = "CalendarActivity";
@@ -139,21 +144,6 @@ public class CalendarActivity extends NavigationBarActivity {
         mDialogUtil.dismissDialog(this);
     }
 
-    public void onEvent(SendRatingFailedEvent event) {
-        Log.e(TAG, "SendRatingFailedEvent received :(");
-        mDialogUtil.dismissDialog(this);
-        mDialogUtil.showAlertDialog(this, getString(R.string.failure_title), getString(R.string.send_rating_failed_exception));
-    }
-
-    public void onEvent(SendRatingSuccessEvent event) {
-        mDialogUtil.dismissDialog(this);
-        Log.d(TAG, "SendRatingSuccessEvent received!");
-        Toast.makeText(this, "Rating Sent!", Toast.LENGTH_SHORT).show();
-
-        //update the webservice with data as well
-        setupViewPagerState();
-    }
-
     public void onEvent(UserRatingAddedSuccessEvent event) {
         setupViewPagerState();
     }
@@ -170,7 +160,7 @@ public class CalendarActivity extends NavigationBarActivity {
     }
 
     public void onEvent(ShowRatingDialogEvent event) {
-        RatingDialogFragment.newInstance(event.mEventId).show(getSupportFragmentManager(), RATING_DIALOG_FRAGMENT_TAG);
+        RatingDialogFragment.newInstance(event.mEventId).show(getSupportFragmentManager(), TAG);
     }
 
     public void onEvent(final SendRatingEvent sendRatingEvent) {
@@ -184,12 +174,19 @@ public class CalendarActivity extends NavigationBarActivity {
 
         mEmailService.sendRatingMail(
                 event,
-                sendRatingEvent.mRatingData
+                sendRatingEvent.mRatingData,
+                thinkofaname(new Runnable() {
+                    @Override
+                    public void run() {
+                        //update the webservice with data as well
+                        setupViewPagerState();
+                    }
+                })
         );
 
         mRatingServiceManager.addRating(
-                event.mOrganizer.emailAddress.mAddress,
-                sendRatingEvent.mRatingData
+        event.mOrganizer.emailAddress.mAddress,
+        sendRatingEvent.mRatingData
         );
     }
 

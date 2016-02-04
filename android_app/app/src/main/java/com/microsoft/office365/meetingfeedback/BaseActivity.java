@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.microsoft.office365.meetingfeedback.event.SendRatingFailedEvent;
 import com.microsoft.office365.meetingfeedback.inject.ActivityModule;
@@ -23,10 +24,13 @@ import javax.inject.Inject;
 
 import dagger.ObjectGraph;
 import de.greenrobot.event.EventBus;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    public static final String RATING_DIALOG_FRAGMENT_TAG = "RatingDialogFragmentTag";
+    private static final String TAG = "BaseActivity";
 
     private ObjectGraph mActivityGraph;
 
@@ -85,5 +89,28 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     public RateMyMeetingsDialogFragment getDialog() {
         return mProgressDialog;
+    }
+
+    //TODO: Change this name
+    protected Callback<Void> thinkofaname(final Runnable action) {
+        return new Callback<Void>() {
+            @Override
+            public void success(Void aVoid, Response response) {
+                //update the webservice with the ratingEvent rating
+                mDialogUtil.dismissDialog(BaseActivity.this);
+                Log.d(TAG, "SendRatingSuccessEvent received!");
+                Toast.makeText(BaseActivity.this, "Rating Sent!", Toast.LENGTH_SHORT).show();
+                if (null != action){
+                    action.run();
+                }
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, "SendRatingFailedEvent received :(");
+                mDialogUtil.dismissDialog(BaseActivity.this);
+                mDialogUtil.showAlertDialog(BaseActivity.this, getString(R.string.failure_title), getString(R.string.send_rating_failed_exception));
+            }
+        };
     }
 }

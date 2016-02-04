@@ -33,6 +33,9 @@ import com.microsoft.office365.meetingfeedback.view.ShowRatingDialogEvent;
 import javax.inject.Inject;
 
 import de.greenrobot.event.EventBus;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MeetingDetailActivity extends NavigationBarActivity {
 
@@ -195,7 +198,7 @@ public class MeetingDetailActivity extends NavigationBarActivity {
     }
 
     public void onEvent(ShowRatingDialogEvent event) {
-        RatingDialogFragment.newInstance(event.mEventId).show(getSupportFragmentManager(), RATING_DIALOG_FRAGMENT_TAG);
+        RatingDialogFragment.newInstance(event.mEventId).show(getSupportFragmentManager(), TAG);
     }
 
     public void onEvent(final SendRatingEvent sendRatingEvent) {
@@ -209,7 +212,29 @@ public class MeetingDetailActivity extends NavigationBarActivity {
 
         mEmailService.sendRatingMail(
                 event,
-                sendRatingEvent.mRatingData
+                sendRatingEvent.mRatingData,
+                thinkofaname(null)
+        );
+
+        mEmailService.sendRatingMail(
+                event,
+                sendRatingEvent.mRatingData,
+                new Callback<Void>() {
+                    @Override
+                    public void success(Void aVoid, Response response) {
+                        //update the webservice with the ratingEvent rating
+                        mDialogUtil.dismissDialog(MeetingDetailActivity.this);
+                        Log.d(TAG, "SendRatingSuccessEvent received!");
+                        Toast.makeText(MeetingDetailActivity.this, "Rating Sent!", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void failure(RetrofitError error) {
+                        Log.e(TAG, "SendRatingFailedEvent received :(");
+                        mDialogUtil.dismissDialog(MeetingDetailActivity.this);
+                        mDialogUtil.showAlertDialog(MeetingDetailActivity.this, getString(R.string.failure_title), getString(R.string.send_rating_failed_exception));
+                    }
+                }
         );
 
         mRatingServiceManager.addRating(

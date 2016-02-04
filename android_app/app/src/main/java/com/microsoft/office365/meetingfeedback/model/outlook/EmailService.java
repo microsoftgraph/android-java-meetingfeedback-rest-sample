@@ -53,7 +53,8 @@ public class EmailService {
      */
     public void sendRatingMail (
             final Event event,
-            final RatingData ratingData) {
+            final RatingData ratingData,
+            Callback<Void> callback) {
 
         // create the email
         MessageWrapper msg = createMailPayload(
@@ -63,18 +64,7 @@ public class EmailService {
         );
 
         // send it using our service
-        mEmailClient.sendMail("application/json", msg, new Callback<Void>() {
-            @Override
-            public void success(Void aVoid, Response response) {
-                //update the webservice with the ratingEvent rating
-                EventBus.getDefault().post(new SendRatingSuccessEvent(ratingData.mEventId));
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                EventBus.getDefault().post(new SendRatingFailedEvent());
-            }
-        });
+        mEmailClient.sendMail("application/json", msg, callback);
     }
 
     private MessageWrapper createMailPayload(
