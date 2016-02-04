@@ -68,19 +68,30 @@ public class MyMeetingsService extends IntentService {
                 Log.d(TAG, "success!");
                 //todo: compare the shared preferences version with the new version
                 Map<String, Double> newMeetingResponse = meetingResponse.toMap();
-                for (String id : newMeetingResponse.keySet()) {
+                for (final String id : newMeetingResponse.keySet()) {
                     Double savedCountForMeeting = mSavedMeetingResults.get(id);
                     Double newCountForMeeting = newMeetingResponse.get(id);
-                    //if old meeting response didnt have the key
+                    //if old meeting response didn't have the key
+                    Callback<Void> loadRatingsCallback = new Callback<Void>() {
+                        @Override
+                        public void success(Void aVoid, Response response) {
+                            sendNotificationForEvent(id);
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.e(TAG, error.getMessage());
+                        }
+                    };
                     if (!mSavedMeetingResults.containsKey(id)) {
                         Log.d(TAG, "RATING COUNT CHANGED! Send a notification for " + id + "!");
-                        mRatingServiceManager.loadRatingFromWebservice(id, "");
+                        mRatingServiceManager.loadRatingFromWebservice(id, "", loadRatingsCallback);
                         sendNotificationForEvent(id);
                     }
                     if (savedCountForMeeting != null && newCountForMeeting != null
                             && !savedCountForMeeting.equals(newCountForMeeting)) {
                         Log.d(TAG, "RATING COUNT CHANGED! Send a notification for " + id + " !");
-                        mRatingServiceManager.loadRatingFromWebservice(id, "");
+                        mRatingServiceManager.loadRatingFromWebservice(id, "", loadRatingsCallback);
                         sendNotificationForEvent(id);
                     }
                 }

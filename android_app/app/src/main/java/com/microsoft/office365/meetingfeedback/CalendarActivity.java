@@ -16,7 +16,6 @@ import com.microsoft.office365.meetingfeedback.event.LoadCalendarSuccessEvent;
 import com.microsoft.office365.meetingfeedback.event.PageChangeEvent;
 import com.microsoft.office365.meetingfeedback.event.RefreshCalendarDataEvent;
 import com.microsoft.office365.meetingfeedback.event.SendRatingEvent;
-import com.microsoft.office365.meetingfeedback.event.UserRatingAddedSuccessEvent;
 import com.microsoft.office365.meetingfeedback.model.EventFilter;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventGroup;
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
@@ -135,10 +134,6 @@ public class CalendarActivity extends NavigationBarActivity {
         mDialogUtil.dismissDialog(this);
     }
 
-    public void onEvent(UserRatingAddedSuccessEvent event) {
-        setupViewPagerState();
-    }
-
     public void onEvent(PageChangeEvent event) {
         setPage(event.mPage);
     }
@@ -165,19 +160,24 @@ public class CalendarActivity extends NavigationBarActivity {
 
         mEmailService.sendRatingMail(
                 event,
-                sendRatingEvent.mRatingData,
-                thinkofaname(new Runnable() {
-                    @Override
-                    public void run() {
-                        //update the webservice with data as well
-                        setupViewPagerState();
-                    }
-                })
+                sendRatingEvent.mRatingData
         );
 
         mRatingServiceManager.addRating(
-        event.mOrganizer.emailAddress.mAddress,
-        sendRatingEvent.mRatingData
+            event.mOrganizer.emailAddress.mAddress,
+            sendRatingEvent.mRatingData,
+            dismissDialogCallback(
+                    "Rating Sent!",
+                    getString(R.string.failure_title),
+                    getString(R.string.send_rating_failed_exception),
+                    new Runnable() {
+                        @Override
+                        public void run() {
+                            //update the webservice with data as well
+                            setupViewPagerState();
+                        }
+                    }
+            )
         );
     }
 

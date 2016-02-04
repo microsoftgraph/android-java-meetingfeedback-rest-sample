@@ -15,24 +15,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.microsoft.office365.meetingfeedback.event.SendRatingEvent;
-import com.microsoft.office365.meetingfeedback.event.SendRatingFailedEvent;
-import com.microsoft.office365.meetingfeedback.event.SendRatingSuccessEvent;
-import com.microsoft.office365.meetingfeedback.event.UserRatingAddedSuccessEvent;
-import com.microsoft.office365.meetingfeedback.event.UserRatingsLoadedSuccessEvent;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventDecorator;
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingServiceResponseData;
 import com.microsoft.office365.meetingfeedback.view.RatingDialogFragment;
 import com.microsoft.office365.meetingfeedback.view.RatingsRecyclerViewAdapter;
-import com.microsoft.office365.meetingfeedback.view.ShowRatingDialogEvent;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -93,7 +86,7 @@ public class MeetingDetailActivity extends NavigationBarActivity {
         mEventRatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new ShowRatingDialogEvent(mEventId));
+                RatingDialogFragment.newInstance(mEventId).show(getSupportFragmentManager(), TAG);
             }
         });
         setupRecyclerView();
@@ -102,13 +95,26 @@ public class MeetingDetailActivity extends NavigationBarActivity {
         setupRatingArea();
 
         setTitle(getString(R.string.meeting_details));
+
+        final Callback<Void> loadRatingsCallback = new Callback<Void>() {
+            @Override
+            public void success(Void aVoid, Response response) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                updateUIState();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, error.getMessage());
+            }
+        };
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mRatingServiceManager.loadRatingFromWebservice(mEvent);
+                mRatingServiceManager.loadRatingFromWebservice(mEvent, loadRatingsCallback);
             }
         });
-        mRatingServiceManager.loadRatingFromWebservice(mEvent); //refresh the event
+        mRatingServiceManager.loadRatingFromWebservice(mEvent, loadRatingsCallback);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -127,7 +133,7 @@ public class MeetingDetailActivity extends NavigationBarActivity {
             mRatingHeader.setVisibility(View.VISIBLE);
             mRatingNone.setVisibility(View.GONE);
         } else {
-            //doesnt..
+            //doesn't...
             mMeetingRatings.setVisibility(View.GONE);
             mRatingHeader.setVisibility(View.GONE);
             mRatingNone.setVisibility(View.VISIBLE);
@@ -166,39 +172,10 @@ public class MeetingDetailActivity extends NavigationBarActivity {
         }
     }
 
-    public void onEvent(UserRatingsLoadedSuccessEvent event) {
-        mSwipeRefreshLayout.setRefreshing(false);
-        updateUIState();
-    }
-
-    public void onEvent(UserRatingAddedSuccessEvent userRatingAddedSuccessEvent) {
-        //reload the adapter since the data changed!
-        MeetingServiceResponseData webServiceRatingDataForEvent = mDataStore.getWebServiceRatingDataForEvent(mEventId);
-        mEventDecorator = new EventDecorator(mEvent, webServiceRatingDataForEvent);
-        updateUIState();
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
-
     private void updateUIState() {
         setupRatingAdapter();
         setupRatingArea();
         setupRatingButton();
-    }
-
-    public void onEvent(SendRatingSuccessEvent sendRatingSuccessEvent) {
-        Log.d(TAG, "SendRatingSuccessEvent received!");
-        Toast.makeText(this, "Rating Sent!", Toast.LENGTH_SHORT).show();
-        mDialogUtil.dismissDialog(this);
-    }
-
-    public void onEvent(SendRatingFailedEvent event) {
-        Log.e(TAG, "SendRatingFailedEvent received :(");
-        mDialogUtil.dismissDialog(this);
-        mDialogUtil.showAlertDialog(this, getString(R.string.failure_title), getString(R.string.send_rating_failed_exception));
-    }
-
-    public void onEvent(ShowRatingDialogEvent event) {
-        RatingDialogFragment.newInstance(event.mEventId).show(getSupportFragmentManager(), TAG);
     }
 
     public void onEvent(final SendRatingEvent sendRatingEvent) {
@@ -208,38 +185,30 @@ public class MeetingDetailActivity extends NavigationBarActivity {
                 getString(R.string.submitting_rating_description)
         );
 
-        final Event event = mDataStore.getEventById(sendRatingEvent.mRatingData.mEventId);
+        final Event event = mDataStore.getEventById(mEventId);
 
         mEmailService.sendRatingMail(
                 event,
-                sendRatingEvent.mRatingData,
-                thinkofaname(null)
-        );
-
-        mEmailService.sendRatingMail(
-                event,
-                sendRatingEvent.mRatingData,
-                new Callback<Void>() {
-                    @Override
-                    public void success(Void aVoid, Response response) {
-                        //update the webservice with the ratingEvent rating
-                        mDialogUtil.dismissDialog(MeetingDetailActivity.this);
-                        Log.d(TAG, "SendRatingSuccessEvent received!");
-                        Toast.makeText(MeetingDetailActivity.this, "Rating Sent!", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void failure(RetrofitError error) {
-                        Log.e(TAG, "SendRatingFailedEvent received :(");
-                        mDialogUtil.dismissDialog(MeetingDetailActivity.this);
-                        mDialogUtil.showAlertDialog(MeetingDetailActivity.this, getString(R.string.failure_title), getString(R.string.send_rating_failed_exception));
-                    }
-                }
+                sendRatingEvent.mRatingData
         );
 
         mRatingServiceManager.addRating(
                 event.mOrganizer.emailAddress.mAddress,
-                sendRatingEvent.mRatingData
+                sendRatingEvent.mRatingData,
+                dismissDialogCallback(
+                        "Rating Sent!",
+                        getString(R.string.failure_title),
+                        getString(R.string.send_rating_failed_exception),
+                        new Runnable() {
+                            @Override
+                            public void run() {
+                                MeetingServiceResponseData webServiceRatingDataForEvent = mDataStore.getWebServiceRatingDataForEvent(mEventId);
+                                mEventDecorator = new EventDecorator(mEvent, webServiceRatingDataForEvent);
+                                updateUIState();
+                                mSwipeRefreshLayout.setRefreshing(false);
+                            }
+                        }
+                )
         );
     }
 

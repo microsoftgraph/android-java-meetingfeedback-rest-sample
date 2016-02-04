@@ -91,15 +91,18 @@ public abstract class BaseActivity extends AppCompatActivity {
         return mProgressDialog;
     }
 
-    //TODO: Change this name
-    protected Callback<Void> thinkofaname(final Runnable action) {
+    protected Callback<Void> dismissDialogCallback(
+            final String toastMessage,
+            final String alertDialogTitle,
+            final String alertDialogMessage,
+            final Runnable action) {
         return new Callback<Void>() {
             @Override
             public void success(Void aVoid, Response response) {
                 //update the webservice with the ratingEvent rating
                 mDialogUtil.dismissDialog(BaseActivity.this);
-                Log.d(TAG, "SendRatingSuccessEvent received!");
-                Toast.makeText(BaseActivity.this, "Rating Sent!", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "DismissDialogCallback Success");
+                Toast.makeText(BaseActivity.this, toastMessage, Toast.LENGTH_SHORT).show();
                 if (null != action){
                     action.run();
                 }
@@ -107,9 +110,9 @@ public abstract class BaseActivity extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.e(TAG, "SendRatingFailedEvent received :(");
+                Log.e(TAG, "DismissDialogCallback Failure");
                 mDialogUtil.dismissDialog(BaseActivity.this);
-                mDialogUtil.showAlertDialog(BaseActivity.this, getString(R.string.failure_title), getString(R.string.send_rating_failed_exception));
+                mDialogUtil.showAlertDialog(BaseActivity.this, alertDialogTitle, alertDialogMessage);
             }
         };
     }

@@ -5,6 +5,7 @@
 package com.microsoft.office365.meetingfeedback.model.outlook;
 
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.microsoft.office365.meetingfeedback.model.Constants;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationManager;
@@ -22,6 +23,8 @@ import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 
 import retrofit.Callback;
 import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 /**
  * Handles the creation of the message and contacting the
@@ -32,6 +35,7 @@ import retrofit.RestAdapter;
 public class EmailService {
 
     private EmailInterface mEmailClient;
+    private static final String TAG = "EmailService";
 
     public EmailService(AuthenticationManager authenticationManager) {
         RestAdapter restAdapter = new RESTHelper(authenticationManager).getRestAdapter();
@@ -48,8 +52,8 @@ public class EmailService {
      */
     public void sendRatingMail (
             final Event event,
-            final RatingData ratingData,
-            Callback<Void> callback) {
+            final RatingData ratingData
+    ) {
 
         // create the email
         MessageWrapper msg = createMailPayload(
@@ -59,7 +63,17 @@ public class EmailService {
         );
 
         // send it using our service
-        mEmailClient.sendMail("application/json", msg, callback);
+        mEmailClient.sendMail("application/json", msg, new Callback<Void>() {
+            @Override
+            public void success(Void aVoid, Response response) {
+                Log.d(TAG, "Successfully sent mail");
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, error.getMessage());
+            }
+        });
     }
 
     private MessageWrapper createMailPayload(
