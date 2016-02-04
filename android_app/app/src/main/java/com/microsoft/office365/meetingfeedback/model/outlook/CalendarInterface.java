@@ -5,6 +5,7 @@
 package com.microsoft.office365.meetingfeedback.model.outlook;
 
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.Envelope;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 
 import retrofit.Callback;
 import retrofit.http.GET;
@@ -21,6 +22,6 @@ public interface CalendarInterface {
             @Query("$select") String select,
             @Query("$orderby") String orderBy,
             @Query("$top") String top,
-            Callback<Envelope> callback
+            Callback<Envelope<Event>> callback
     );
 }

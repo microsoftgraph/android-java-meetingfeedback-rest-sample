@@ -14,7 +14,6 @@ import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import com.microsoft.office365.meetingfeedback.model.request.RESTHelper;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -38,11 +37,10 @@ public class CalendarService {
     }
 
     public void fetchEvents() {
-        getEvents(new Callback<Envelope>() {
+        getEvents(new Callback<Envelope<Event>>() {
             @Override
             public void success(Envelope envelope, Response response) {
-                mAccumulatedEvents = new ArrayList<>();
-                mAccumulatedEvents.addAll((envelope.mValues));
+                mAccumulatedEvents = envelope.mValues;
                 mDataStore.setEvents(mAccumulatedEvents);
                 EventBus.getDefault().post(new LoadCalendarSuccessEvent());
             }
@@ -54,7 +52,7 @@ public class CalendarService {
         });
     }
 
-    private void getEvents(Callback<Envelope> callback) {
+    private void getEvents(Callback<Envelope<Event>> callback) {
         DateRange dateRange = getDateRange();
         String startDateTime = FormatUtil.convertDateToUrlString(dateRange.mStart.getTime());
         String endDateTime = FormatUtil.convertDateToUrlString(dateRange.mEnd.getTime());
