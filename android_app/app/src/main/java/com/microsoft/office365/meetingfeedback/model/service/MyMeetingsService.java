@@ -83,16 +83,14 @@ public class MyMeetingsService extends IntentService {
                             Log.e(TAG, error.getMessage());
                         }
                     };
-                    if (!mSavedMeetingResults.containsKey(id)) {
+                    if (!mSavedMeetingResults.containsKey(id) && newCountForMeeting > 0) {
                         Log.d(TAG, "RATING COUNT CHANGED! Send a notification for " + id + "!");
                         mRatingServiceManager.loadRatingFromWebservice(id, "", loadRatingsCallback);
-                        sendNotificationForEvent(id);
                     }
                     if (savedCountForMeeting != null && newCountForMeeting != null
                             && !savedCountForMeeting.equals(newCountForMeeting)) {
                         Log.d(TAG, "RATING COUNT CHANGED! Send a notification for " + id + " !");
                         mRatingServiceManager.loadRatingFromWebservice(id, "", loadRatingsCallback);
-                        sendNotificationForEvent(id);
                     }
                 }
                 mDataStore.setMyMeetings(newMeetingResponse);
