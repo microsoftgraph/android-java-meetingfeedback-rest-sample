@@ -33,8 +33,6 @@ dependencies {
     // Dependency injection
     compile 'com.squareup.dagger:dagger:1.2.2'
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
-    // EventBus
-    compile 'de.greenrobot:eventbus:2.4.1'
     // REST interface
     compile 'com.squareup.retrofit:retrofit:1.9.0'
 }

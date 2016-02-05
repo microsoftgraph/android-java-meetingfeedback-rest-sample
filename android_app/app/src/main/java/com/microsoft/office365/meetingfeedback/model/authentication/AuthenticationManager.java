@@ -8,12 +8,9 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
-import com.microsoft.aad.adal.ADALError;
 import com.microsoft.aad.adal.AuthenticationCallback;
 import com.microsoft.aad.adal.AuthenticationContext;
-import com.microsoft.aad.adal.AuthenticationException;
 import com.microsoft.aad.adal.AuthenticationResult;
-import com.microsoft.aad.adal.AuthenticationResult.AuthenticationStatus;
 import com.microsoft.aad.adal.AuthenticationSettings;
 import com.microsoft.aad.adal.PromptBehavior;
 import com.microsoft.office365.meetingfeedback.model.Constants;
@@ -87,18 +84,12 @@ public class AuthenticationManager {
                 new AuthenticationCallback<AuthenticationResult>() {
                     @Override
                     public void onSuccess(final AuthenticationResult authenticationResult) {
-                        if (authenticationResult != null && authenticationResult.getStatus() == AuthenticationStatus.Succeeded) {
-                            if(null == mDataStore.getUser()) {
-                                User user = new User(authenticationResult.getUserInfo());
-                                mDataStore.setUser(user);
-                            }
-                            if(null != authenticationCallback) {
-                                authenticationCallback.onSuccess(authenticationResult);
-                            }
-                        } else if (null != authenticationResult) {
-                            // I could not authenticate the user silently,
-                            // falling back to prompt the user for credentials.
-                            authenticatePrompt(authenticationCallback);
+                        if(null == mDataStore.getUser()) {
+                            User user = new User(authenticationResult.getUserInfo());
+                            mDataStore.setUser(user);
+                        }
+                        if(null != authenticationCallback) {
+                            authenticationCallback.onSuccess(authenticationResult);
                         }
                     }
 
@@ -127,25 +118,10 @@ public class AuthenticationManager {
                 new AuthenticationCallback<AuthenticationResult>() {
                     @Override
                     public void onSuccess(final AuthenticationResult authenticationResult) {
-                        if (authenticationResult != null && authenticationResult.getStatus() == AuthenticationStatus.Succeeded) {
-                            User user = new User(authenticationResult.getUserInfo());
-                            mDataStore.setUser(user);
-                            if(null != authenticationCallback) {
-                                authenticationCallback.onSuccess(authenticationResult);
-                            }
-                        } else if (authenticationResult != null) {
-                            // We need to make sure that there is no data stored with the failed auth
-                            signout();
-                            // This condition can happen if user signs in with an MSA account
-                            // instead of an Office 365 account
-                            if(null != authenticationCallback) {
-                                authenticationCallback.onError(
-                                        new AuthenticationException(
-                                                ADALError.AUTH_FAILED,
-                                                authenticationResult.getErrorDescription()
-                                        )
-                                );
-                            }
+                        User user = new User(authenticationResult.getUserInfo());
+                        mDataStore.setUser(user);
+                        if(null != authenticationCallback) {
+                            authenticationCallback.onSuccess(authenticationResult);
                         }
                     }
 

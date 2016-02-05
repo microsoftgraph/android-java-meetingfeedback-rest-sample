@@ -5,9 +5,8 @@
 package com.microsoft.office365.meetingfeedback.model.outlook;
 
 import android.text.TextUtils;
+import android.util.Log;
 
-import com.microsoft.office365.meetingfeedback.event.SendRatingFailedEvent;
-import com.microsoft.office365.meetingfeedback.event.SendRatingSuccessEvent;
 import com.microsoft.office365.meetingfeedback.model.Constants;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationManager;
 import com.microsoft.office365.meetingfeedback.model.meeting.RatingData;
@@ -22,7 +21,6 @@ import com.microsoft.office365.meetingfeedback.model.outlook.payload.ToRecipient
 import com.microsoft.office365.meetingfeedback.model.request.RESTHelper;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 
-import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -37,6 +35,7 @@ import retrofit.client.Response;
 public class EmailService {
 
     private EmailInterface mEmailClient;
+    private static final String TAG = "EmailService";
 
     public EmailService(AuthenticationManager authenticationManager) {
         RestAdapter restAdapter = new RESTHelper(authenticationManager).getRestAdapter();
@@ -53,7 +52,8 @@ public class EmailService {
      */
     public void sendRatingMail (
             final Event event,
-            final RatingData ratingData) {
+            final RatingData ratingData
+    ) {
 
         // create the email
         MessageWrapper msg = createMailPayload(
@@ -66,13 +66,12 @@ public class EmailService {
         mEmailClient.sendMail("application/json", msg, new Callback<Void>() {
             @Override
             public void success(Void aVoid, Response response) {
-                //update the webservice with the ratingEvent rating
-                EventBus.getDefault().post(new SendRatingSuccessEvent(ratingData.mEventId));
+                Log.d(TAG, "Successfully sent mail");
             }
 
             @Override
             public void failure(RetrofitError error) {
-                EventBus.getDefault().post(new SendRatingFailedEvent());
+                Log.e(TAG, error.getMessage());
             }
         });
     }

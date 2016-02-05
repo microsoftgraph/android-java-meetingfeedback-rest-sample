@@ -4,22 +4,18 @@
  */
 package com.microsoft.office365.meetingfeedback.model.outlook;
 
-import com.microsoft.office365.meetingfeedback.event.LoadCalendarFailedEvent;
-import com.microsoft.office365.meetingfeedback.event.LoadCalendarSuccessEvent;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.authentication.AuthenticationManager;
 import com.microsoft.office365.meetingfeedback.model.meeting.DateRange;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Envelope;
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
-import com.microsoft.office365.meetingfeedback.model.outlook.payload.EventWrapper;
 import com.microsoft.office365.meetingfeedback.model.request.RESTHelper;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.TimeZone;
 
-import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -37,29 +33,42 @@ public class CalendarService {
         mCalendarClient = restAdapter.create(CalendarInterface.class);
     }
 
-    public void fetchEvents() {
-        getEvents(new Callback<EventWrapper>() {
+    public void fetchEvents(final Callback<Void> callback) {
+        getEvents(new Callback<Envelope<Event>>() {
             @Override
-            public void success(EventWrapper eventWrapper, Response response) {
-                mAccumulatedEvents = new ArrayList<>();
-                mAccumulatedEvents.addAll((eventWrapper.mEvents));
+            public void success(Envelope envelope, Response response) {
+                mAccumulatedEvents = envelope.mValues;
                 mDataStore.setEvents(mAccumulatedEvents);
-                EventBus.getDefault().post(new LoadCalendarSuccessEvent());
+                if(null != callback) {
+                    callback.success(null, response);
+                }
             }
 
             @Override
             public void failure(RetrofitError error) {
-                EventBus.getDefault().post(new LoadCalendarFailedEvent());
+                if(null != callback) {
+                    callback.failure(error);
+                }
             }
         });
     }
 
-    private void getEvents(Callback<EventWrapper> callback) {
+    private void getEvents(Callback<Envelope<Event>> callback) {
         DateRange dateRange = getDateRange();
         String startDateTime = FormatUtil.convertDateToUrlString(dateRange.mStart.getTime());
         String endDateTime = FormatUtil.convertDateToUrlString(dateRange.mEnd.getTime());
         String preferredTimezone = "outlook.timezone=\"" + TimeZone.getDefault().getID() + "\"";
-        mCalendarClient.getEvents("application/json", preferredTimezone, startDateTime, endDateTime, callback);
+
+        mCalendarClient.getEvents(
+                "application/json",
+                preferredTimezone,
+                startDateTime,
+                endDateTime,
+                "subject,start,end,organizer,isOrganizer,attendees,bodyPreview,iCalUID",
+                "start/datetime desc",
+                "150",
+                callback
+        );
     }
 
     private DateRange getDateRange() {

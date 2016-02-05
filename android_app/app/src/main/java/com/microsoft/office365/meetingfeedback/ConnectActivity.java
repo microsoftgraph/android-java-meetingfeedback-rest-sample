@@ -14,9 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.microsoft.aad.adal.AuthenticationCallback;
+import com.microsoft.aad.adal.AuthenticationResult;
 import com.microsoft.aad.adal.IWindowComponent;
 
-public class ConnectActivity extends BaseActivity implements AuthenticationCallback, IWindowComponent {
+public class ConnectActivity extends BaseActivity implements AuthenticationCallback<AuthenticationResult>, IWindowComponent {
 
     private Button mConnectButton;
     private ProgressBar mConnectProgressBar;
@@ -41,7 +42,7 @@ public class ConnectActivity extends BaseActivity implements AuthenticationCallb
     }
 
     @Override
-    public void onSuccess(Object result) {
+    public void onSuccess(AuthenticationResult authenticationResult) {
         Log.d(TAG, "authentication success!");
 
         finish();
