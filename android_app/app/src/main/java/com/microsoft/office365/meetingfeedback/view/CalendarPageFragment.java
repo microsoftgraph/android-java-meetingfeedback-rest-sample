@@ -16,16 +16,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.microsoft.office365.meetingfeedback.BaseFragment;
+import com.microsoft.office365.meetingfeedback.CalendarActivity;
 import com.microsoft.office365.meetingfeedback.R;
-import com.microsoft.office365.meetingfeedback.event.RefreshCalendarDataEvent;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventDecorator;
 
 import java.util.List;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 public class CalendarPageFragment extends BaseFragment {
 
@@ -79,12 +77,7 @@ public class CalendarPageFragment extends BaseFragment {
         mEventsRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_calendar_page_recyclerview);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_calendar_page_swipe_refresh_layout);
         mNoEventsFoundIndicator = (TextView) view.findViewById(R.id.fragment_calendar_page_no_events_indicator);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                EventBus.getDefault().post(new RefreshCalendarDataEvent());
-            }
-        });
+        mSwipeRefreshLayout.setOnRefreshListener((CalendarActivity)getActivity());
         return view;
     }
 

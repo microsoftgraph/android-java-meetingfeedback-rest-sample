@@ -16,8 +16,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.microsoft.office365.meetingfeedback.event.SendRatingEvent;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventDecorator;
+import com.microsoft.office365.meetingfeedback.model.meeting.RatingData;
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingServiceResponseData;
@@ -30,7 +30,7 @@ import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
 
-public class MeetingDetailActivity extends NavigationBarActivity {
+public class MeetingDetailActivity extends NavigationBarActivity implements RatingActivity {
 
     @Inject
     RatingServiceManager mRatingServiceManager;
@@ -178,39 +178,20 @@ public class MeetingDetailActivity extends NavigationBarActivity {
         setupRatingButton();
     }
 
-    public void onEvent(final SendRatingEvent sendRatingEvent) {
-        mDialogUtil.showProgressDialog(
-                this,
-                getString(R.string.submit_rating),
-                getString(R.string.submitting_rating_description)
-        );
-
-        final Event event = mDataStore.getEventById(mEventId);
-
-        mEmailService.sendRatingMail(
+    public void sendRating(Event event, RatingData ratingData){
+        super.sendRating(
                 event,
-                sendRatingEvent.mRatingData
-        );
-
-        mRatingServiceManager.addRating(
-                event.mOrganizer.emailAddress.mAddress,
-                sendRatingEvent.mRatingData,
-                dismissDialogCallback(
-                        "Rating Sent!",
-                        getString(R.string.failure_title),
-                        getString(R.string.send_rating_failed_exception),
-                        new Runnable() {
-                            @Override
-                            public void run() {
-                                MeetingServiceResponseData webServiceRatingDataForEvent = mDataStore.getWebServiceRatingDataForEvent(mEventId);
-                                mEventDecorator = new EventDecorator(mEvent, webServiceRatingDataForEvent);
-                                updateUIState();
-                                mSwipeRefreshLayout.setRefreshing(false);
-                            }
-                        }
-                )
+                ratingData,
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        //update the webservice with data as well
+                        MeetingServiceResponseData webServiceRatingDataForEvent = mDataStore.getWebServiceRatingDataForEvent(mEventId);
+                        mEventDecorator = new EventDecorator(mEvent, webServiceRatingDataForEvent);
+                        updateUIState();
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }
         );
     }
-
-
 }

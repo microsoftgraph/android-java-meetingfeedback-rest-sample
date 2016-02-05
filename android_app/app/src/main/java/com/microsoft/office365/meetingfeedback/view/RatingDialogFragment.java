@@ -18,19 +18,24 @@ import android.widget.TextView;
 
 import com.microsoft.office365.meetingfeedback.BaseDialogFragment;
 import com.microsoft.office365.meetingfeedback.R;
-import com.microsoft.office365.meetingfeedback.event.SendRatingEvent;
+import com.microsoft.office365.meetingfeedback.RatingActivity;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.meeting.RatingData;
+import com.microsoft.office365.meetingfeedback.model.outlook.EmailService;
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
+import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 public class RatingDialogFragment extends BaseDialogFragment {
 
     @Inject
     DataStore mDataStore;
+
+    @Inject
+    EmailService mRatingServiceManager;
+    @Inject
+    RatingServiceManager mEmailService;
 
     private static final String MEETING_ID = "MEETING_ID";
     private Button mPositiveButton;
@@ -67,8 +72,11 @@ public class RatingDialogFragment extends BaseDialogFragment {
                 .setPositiveButton(R.string.rate_button_txt, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String eventOwner = mEvent.mOrganizer.emailAddress.mName;
-                        EventBus.getDefault().post(new SendRatingEvent(buildRatingData()));
+                        final Event event = mDataStore.getEventById(mEvent.mICalUId);
+                        final RatingData ratingData = buildRatingData();
+
+                        RatingActivity ratingActivity = (RatingActivity)getActivity();
+                        ratingActivity.sendRating(event, ratingData);
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null);

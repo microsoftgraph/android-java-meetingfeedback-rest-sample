@@ -2,14 +2,11 @@
  * Copyright (c) Microsoft. All rights reserved. Licensed under the MIT license.
  * See LICENSE in the project root for license information.
  */
-package com.microsoft.office365.meetingfeedback.event;
+package com.microsoft.office365.meetingfeedback;
 
 import com.microsoft.office365.meetingfeedback.model.meeting.RatingData;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 
-public class SendRatingEvent {
-    public RatingData mRatingData;
-
-    public SendRatingEvent(RatingData ratingData) {
-        mRatingData = ratingData;
-    }
+public interface RatingActivity {
+    void sendRating(Event event, RatingData ratingData);
 }

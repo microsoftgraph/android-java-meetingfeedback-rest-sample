@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.microsoft.office365.meetingfeedback.BaseFragment;
+import com.microsoft.office365.meetingfeedback.CalendarActivity;
 import com.microsoft.office365.meetingfeedback.R;
-import com.microsoft.office365.meetingfeedback.event.PageChangeEvent;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventGroup;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
@@ -23,8 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 public class CalendarRangeFragment extends BaseFragment {
 
@@ -76,7 +74,8 @@ public class CalendarRangeFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     setActivePage(page);
-                    EventBus.getDefault().post(new PageChangeEvent(page));
+                    CalendarActivity calendarActivity = (CalendarActivity)getActivity();
+                    calendarActivity.setPage(page);
                 }
             });
         }
