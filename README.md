@@ -38,9 +38,7 @@ The sample includes an Android client and a Ruby on Rails server-side component.
 ```
 gem install builder
 bundle install
-rake db:create
-rake db:migrate
-bundle exec foreman start -p 5000
+rake db:create && rake db:migrate && bundle exec foreman start -p 5000
 ```
 
 ## Setup an email group to receive anonymous email notifications
