@@ -178,7 +178,7 @@ public class MeetingDetailActivity extends NavigationBarActivity implements Rati
         setupRatingButton();
     }
 
-    public void sendRating(Event event, RatingData ratingData){
+    public void onSendRating(Event event, RatingData ratingData){
         super.sendRating(
                 event,
                 ratingData,

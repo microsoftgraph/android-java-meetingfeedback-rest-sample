@@ -24,7 +24,7 @@ import com.microsoft.office365.meetingfeedback.view.CalendarRangeFragment;
 import javax.inject.Inject;
 
 public class CalendarActivity extends NavigationBarActivity implements
-        SwipeRefreshLayout.OnRefreshListener, RatingActivity {
+        SwipeRefreshLayout.OnRefreshListener, RatingActivity, PageSettable {
 
     private static final String TAG = "CalendarActivity";
     public static final String MY_MEETINGS = "My Meetings";
@@ -77,7 +77,7 @@ public class CalendarActivity extends NavigationBarActivity implements
             @Override
             public void onPageSelected(int position) {
                 mPage = position;
-                setPage(mPage);
+                onPageSet(mPage);
                 mCalendarRangeFragment.setActivePage(mPage);
             }
 
@@ -120,7 +120,7 @@ public class CalendarActivity extends NavigationBarActivity implements
                     public void run() {
                         setupViewPagerAdapter();
                         mCalendarRangeFragment.setup();
-                        setPage(mPage);
+                        onPageSet(mPage);
                     }
                 }
         ));
@@ -133,7 +133,7 @@ public class CalendarActivity extends NavigationBarActivity implements
         setupViewPagerState();
     }
 
-    public void sendRating(Event event, RatingData ratingData){
+    public void onSendRating(Event event, RatingData ratingData){
         super.sendRating(
                 event,
                 ratingData,
@@ -148,12 +148,7 @@ public class CalendarActivity extends NavigationBarActivity implements
 
     private void setupViewPagerState() {
         setupViewPagerAdapter();
-        setPage(mPage);
-    }
-
-    public void setPage(int page) {
-        setPageTitle(page);
-        mCalendarViewPager.setCurrentItem(page);
+        onPageSet(mPage);
     }
 
     private void setPageTitle(int position) {
@@ -170,5 +165,12 @@ public class CalendarActivity extends NavigationBarActivity implements
     @Override
     public void onRefresh() {
         requestCalendarData();
+    }
+
+
+    @Override
+    public void onPageSet(int page) {
+        setPageTitle(page);
+        mCalendarViewPager.setCurrentItem(page);
     }
 }
