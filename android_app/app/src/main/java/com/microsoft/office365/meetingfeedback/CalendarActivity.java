@@ -4,58 +4,43 @@
  */
 package com.microsoft.office365.meetingfeedback;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.microsoft.office365.meetingfeedback.event.LoadCalendarFailedEvent;
-import com.microsoft.office365.meetingfeedback.event.LoadCalendarSuccessEvent;
-import com.microsoft.office365.meetingfeedback.event.PageChangeEvent;
-import com.microsoft.office365.meetingfeedback.event.RefreshCalendarDataEvent;
-import com.microsoft.office365.meetingfeedback.event.SendRatingEvent;
-import com.microsoft.office365.meetingfeedback.event.SendRatingFailedEvent;
-import com.microsoft.office365.meetingfeedback.event.SendRatingSuccessEvent;
-import com.microsoft.office365.meetingfeedback.event.UserRatingAddedSuccessEvent;
 import com.microsoft.office365.meetingfeedback.model.EventFilter;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventGroup;
-import com.microsoft.office365.meetingfeedback.model.officeclient.CalendarClientManager;
-import com.microsoft.office365.meetingfeedback.model.service.MyMeetingsService;
+import com.microsoft.office365.meetingfeedback.model.meeting.RatingData;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import com.microsoft.office365.meetingfeedback.model.service.RatingServiceAlarmManager;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 import com.microsoft.office365.meetingfeedback.view.CalendarFragmentPagerAdapter;
 import com.microsoft.office365.meetingfeedback.view.CalendarRangeFragment;
-import com.microsoft.office365.meetingfeedback.view.RatingDialogFragment;
-import com.microsoft.office365.meetingfeedback.view.ShowRatingDialogEvent;
 
 import javax.inject.Inject;
 
-public class CalendarActivity extends NavigationBarActivity {
+public class CalendarActivity extends NavigationBarActivity implements
+        SwipeRefreshLayout.OnRefreshListener, RatingActivity, PageSettable {
 
     private static final String TAG = "CalendarActivity";
+    public static final String MY_MEETINGS = "My Meetings";
 
     private ViewPager mCalendarViewPager;
     private CalendarFragmentPagerAdapter mAdapter;
     private CalendarRangeFragment mCalendarRangeFragment;
     private int mPage;
-    private CalendarClientManager mOutlookClientManager;
-
 
     @Inject
     RatingServiceManager mRatingServiceManager;
     @Inject
     RatingServiceAlarmManager mRatingServiceAlarmManager;
-    private String meetingToLoad;
 
     private Spinner mSpinner;
     private ArrayAdapter mSpinnerAdapter;
-    //todo: move
-    public static final String MY_MEETINGS = "My Meetings";
 
     @Override
     protected int getActivityLayoutId() {
@@ -63,19 +48,10 @@ public class CalendarActivity extends NavigationBarActivity {
     }
 
     @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        meetingToLoad = intent.getStringExtra(MyMeetingsService.EVENT_ID);
-        System.out.println("-->" + meetingToLoad);
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mCalendarViewPager = (ViewPager) findViewById(R.id.activity_calendar_viewpager);
-        mOutlookClientManager = mClientManager.getCalendarClientManager();
-        meetingToLoad = getIntent().getStringExtra(MyMeetingsService.EVENT_ID);
         mSpinner = (Spinner) findViewById(R.id.activity_calendar_select_role);
         mSpinnerAdapter = ArrayAdapter.createFromResource(this,
                 R.array.meeting_filter_spinner_options,
@@ -93,7 +69,7 @@ public class CalendarActivity extends NavigationBarActivity {
             }
         });
         updateCurrentFilter();
-        mCalendarViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        mCalendarViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
             }
@@ -101,8 +77,8 @@ public class CalendarActivity extends NavigationBarActivity {
             @Override
             public void onPageSelected(int position) {
                 mPage = position;
-                setPage(mPage);
-                mCalendarRangeFragment.setActivePage(position);
+                onPageSet(mPage);
+                mCalendarRangeFragment.setActivePage(mPage);
             }
 
             @Override
@@ -134,7 +110,20 @@ public class CalendarActivity extends NavigationBarActivity {
 
     private void requestCalendarData() {
         mDialogUtil.showProgressDialog(this, R.string.calendar_events, R.string.calendar_events_loading);
-        mOutlookClientManager.fetchEvents();
+
+        mCalendarService.fetchEvents(dismissDialogCallback(
+                null,
+                getString(R.string.failure_title),
+                getString(R.string.loading_calendar_failed),
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        setupViewPagerAdapter();
+                        mCalendarRangeFragment.setup();
+                        onPageSet(mPage);
+                    }
+                }
+        ));
         mRatingServiceManager.loadRatingsFromWebservice();
     }
 
@@ -144,70 +133,22 @@ public class CalendarActivity extends NavigationBarActivity {
         setupViewPagerState();
     }
 
-    public void onEvent(RefreshCalendarDataEvent event) {
-        requestCalendarData();
-    }
-
-    public void onEvent(LoadCalendarFailedEvent event) {
-        mDialogUtil.showAlertDialog(this, getString(R.string.failure_title), getString(R.string.loading_calendar_failed));
-        mDialogUtil.dismissDialog(this);
-    }
-
-    public void onEvent(SendRatingFailedEvent event) {
-        Log.e(TAG, "SendRatingFailedEvent received :(");
-        mDialogUtil.dismissDialog(this);
-        mDialogUtil.showAlertDialog(this, getString(R.string.failure_title), getString(R.string.send_rating_failed_exception));
-    }
-
-    public void onEvent(SendRatingSuccessEvent event) {
-        mDialogUtil.dismissDialog(this);
-        Log.d(TAG, "SendRatingSuccessEvent received!");
-        Toast.makeText(this, "Rating Sent!", Toast.LENGTH_SHORT).show();
-
-        //update the webservice with data as well
-        setupViewPagerState();
-    }
-
-    public void onEvent(UserRatingAddedSuccessEvent event) {
-        setupViewPagerState();
-    }
-
-    public void onEvent(PageChangeEvent event) {
-        setPage(event.mPage);
-    }
-
-    public void onEvent(LoadCalendarSuccessEvent event) {
-        mDialogUtil.dismissDialog(this);
-        setupViewPagerAdapter();
-        if (meetingToLoad != null) {
-            startupMeetingFromId();
-        }
-        mCalendarRangeFragment.setup();
-    }
-
-    private void startupMeetingFromId() {
-        Intent i = new Intent(CalendarActivity.this, MeetingDetailActivity.class);
-        i.putExtra(MeetingDetailActivity.EVENT_ID_EXTRA, meetingToLoad);
-        startActivity(i);
-    }
-
-    public void onEvent(ShowRatingDialogEvent event) {
-        RatingDialogFragment.newInstance(event.mEventId).show(getSupportFragmentManager(), RATING_DIALOG_FRAGMENT_TAG);
-    }
-
-    public void onEvent(SendRatingEvent event) {
-        mDialogUtil.showProgressDialog(this, getString(R.string.submit_rating), getString(R.string.submitting_rating_description));
-        mClientManager.getEmailClientManager().sendRating(event.mRatingData);
+    public void onSendRating(Event event, RatingData ratingData){
+        super.sendRating(
+                event,
+                ratingData,
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        setupViewPagerState();
+                    }
+                }
+        );
     }
 
     private void setupViewPagerState() {
         setupViewPagerAdapter();
-        setPage(mPage);
-    }
-
-    private void setPage(int page) {
-        setPageTitle(page);
-        mCalendarViewPager.setCurrentItem(page);
+        onPageSet(mPage);
     }
 
     private void setPageTitle(int position) {
@@ -221,5 +162,15 @@ public class CalendarActivity extends NavigationBarActivity {
         mAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public void onRefresh() {
+        requestCalendarData();
+    }
 
+
+    @Override
+    public void onPageSet(int page) {
+        setPageTitle(page);
+        mCalendarViewPager.setCurrentItem(page);
+    }
 }

@@ -6,22 +6,16 @@ package com.microsoft.office365.meetingfeedback.model.webservice;
 
 import android.util.Log;
 
-import com.microsoft.office365.meetingfeedback.event.UserRatingAddedFailureEvent;
-import com.microsoft.office365.meetingfeedback.event.UserRatingAddedSuccessEvent;
-import com.microsoft.office365.meetingfeedback.event.UserRatingsLoadedFailEvent;
-import com.microsoft.office365.meetingfeedback.event.UserRatingsLoadedSuccessEvent;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.meeting.RatingData;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import com.microsoft.office365.meetingfeedback.model.service.MyMeetingsResponse;
 import com.microsoft.office365.meetingfeedback.model.service.RatingServiceAlarmManager;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.CreateRatingRequest;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingServiceResponseData;
-import com.microsoft.office365.meetingfeedback.util.EventUtil;
-import com.microsoft.services.outlook.Event;
 
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
 import retrofit.Callback;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
@@ -39,38 +33,36 @@ public class RatingServiceManager {
         mDataStore = dataStore;
     }
 
-    public RatingService getRatingService() {
-        return mRatingService;
-    }
-
     public void loadRatingsFromWebservice() {
         mRatingService.getMeetingsAsync(mDataStore.getUsername(), new Callback<List<MeetingServiceResponseData>>() {
             @Override
             public void success(List<MeetingServiceResponseData> meetingServiceResponseDatas, Response response) {
                 mDataStore.setMeetingServiceResponseData(meetingServiceResponseDatas);
-                EventBus.getDefault().post(new UserRatingsLoadedSuccessEvent());
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Log.e(TAG, "something horrible happened!", error);
-                EventBus.getDefault().post(new UserRatingsLoadedFailEvent());
             }
         });
     }
 
-    public void loadRatingFromWebservice(String eventId, String owner) {
+    public void loadRatingFromWebservice(String eventId, String owner, final Callback<Void> callback) {
         mRatingService.getMeetingAsync(eventId, mDataStore.getUsername(), owner, new Callback<MeetingServiceResponseData>() {
             @Override
             public void success(MeetingServiceResponseData meetingServiceResponseData, Response response) {
                 mDataStore.updateMeetingServiceResponse(meetingServiceResponseData);
-                EventBus.getDefault().post(new UserRatingsLoadedSuccessEvent());
+                if(null != callback) {
+                    callback.success(null, response);
+                }
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Log.e(TAG, "something horrible happened!", error);
-                EventBus.getDefault().post(new UserRatingsLoadedFailEvent());
+                if (null != callback) {
+                    callback.failure(error);
+                }
             }
         });
     }
@@ -95,25 +87,29 @@ public class RatingServiceManager {
         });
     }
 
-    public void addRating(String eventOwner, RatingData ratingData) {
+    public void addRating(String eventOwner, RatingData ratingData, final Callback<Void> callback) {
         CreateRatingRequest createRatingRequest = new CreateRatingRequest(ratingData.mEventId, eventOwner, ratingData);
         mRatingService.postRatingAsync(mDataStore.getUsername(), eventOwner, createRatingRequest, new Callback<MeetingServiceResponseData>() {
             @Override
             public void success(MeetingServiceResponseData meetingServiceResponseData, Response response) {
                 mDataStore.updateMeetingServiceResponse(meetingServiceResponseData);
-                EventBus.getDefault().post(new UserRatingAddedSuccessEvent());
+                if(null != callback) {
+                    callback.success(null, response);
+                }
             }
 
             @Override
             public void failure(RetrofitError error) {
                 Log.e(TAG, "something awful happened!!!!", error);
-                EventBus.getDefault().post(new UserRatingAddedFailureEvent());
+                if(null != callback) {
+                    callback.failure(error);
+                }
             }
         });
 
     }
 
-    public void loadRatingFromWebservice(Event event) {
-        loadRatingFromWebservice(event.getICalUId(), EventUtil.getEventOwner(event));
+    public void loadRatingFromWebservice(Event event, Callback<Void> callback) {
+        loadRatingFromWebservice(event.mICalUId, event.mOrganizer.emailAddress.mAddress, callback);
     }
 }

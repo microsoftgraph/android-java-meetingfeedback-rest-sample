@@ -5,10 +5,10 @@
 package com.microsoft.office365.meetingfeedback.model;
 
 import com.microsoft.office365.meetingfeedback.model.meeting.EventGroup;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingServiceResponseData;
 import com.microsoft.office365.meetingfeedback.util.CalendarUtil;
 import com.microsoft.office365.meetingfeedback.util.SharedPrefsUtil;
-import com.microsoft.services.outlook.Event;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +58,7 @@ public class DataStore {
     public void setEvents(List<Event> events) {
         mEvents = events;
         for (Event event : events) {
-            mEventsMap.put(event.getICalUId(), event);
+            mEventsMap.put(event.mICalUId, event);
         }
     }
 
@@ -72,15 +72,19 @@ public class DataStore {
 
     public void setUser(User user) {
         mUser = user;
-        String userName = null;
-        if (mUser != null) {
-            userName = mUser.getUsername();
+        if (null != mUser) {
+            mSharedPrefsUtil.setSavedUserId(mUser.getUserId());
+        } else {
+            mSharedPrefsUtil.setSavedUserId(null);
         }
-        mSharedPrefsUtil.setSavedUsername(userName);
     }
 
     public boolean isUserLoggedIn() {
-        return mUser != null;
+        return mSharedPrefsUtil.getSavedUserId() != null;
+    }
+
+    public String getUserId() {
+        return mSharedPrefsUtil.getSavedUserId();
     }
 
     public String getUsername() {
@@ -102,7 +106,7 @@ public class DataStore {
     public List<Event> getFilteredEvents() {
         List<Event> filteredEvents = new ArrayList<>();
         for (Event event : getEvents()) {
-            boolean condition = event.getIsOrganizer();
+            boolean condition = event.mIsOrganizer;
             condition = mFilter.equals(EventFilter.MY_MEETINGS) ? condition : !condition;
             if (condition) {
                 filteredEvents.add(event);

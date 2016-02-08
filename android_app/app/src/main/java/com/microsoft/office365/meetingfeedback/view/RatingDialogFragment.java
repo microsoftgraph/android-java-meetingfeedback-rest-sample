@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -18,19 +19,24 @@ import android.widget.TextView;
 
 import com.microsoft.office365.meetingfeedback.BaseDialogFragment;
 import com.microsoft.office365.meetingfeedback.R;
-import com.microsoft.office365.meetingfeedback.event.SendRatingEvent;
+import com.microsoft.office365.meetingfeedback.RatingActivity;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.meeting.RatingData;
-import com.microsoft.services.outlook.Event;
+import com.microsoft.office365.meetingfeedback.model.outlook.EmailService;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
+import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 
 import javax.inject.Inject;
-
-import de.greenrobot.event.EventBus;
 
 public class RatingDialogFragment extends BaseDialogFragment {
 
     @Inject
     DataStore mDataStore;
+
+    @Inject
+    EmailService mRatingServiceManager;
+    @Inject
+    RatingServiceManager mEmailService;
 
     private static final String MEETING_ID = "MEETING_ID";
     private Button mPositiveButton;
@@ -55,7 +61,15 @@ public class RatingDialogFragment extends BaseDialogFragment {
         String meetingId = getArguments().getString(MEETING_ID);
         mEvent = mDataStore.getEventById(meetingId);
         mUsername = mDataStore.getUser().getUsername();
-        View inflatedView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_rating_dialog, null);
+
+        //Get the root ViewGroup so we can correctly inflate the view
+        final ViewGroup rootViewGroup = (ViewGroup) ((ViewGroup) this.getActivity()
+                .findViewById(android.R.id.content)).getChildAt(0);
+        View inflatedView = LayoutInflater.from(getActivity()).inflate(
+                R.layout.fragment_rating_dialog,
+                rootViewGroup,
+                false
+        );
 
         mOrganizer = (TextView) inflatedView.findViewById(R.id.fragment_rating_organizer_name);
         mComments = (EditText) inflatedView.findViewById(R.id.fragment_rating_comments);
@@ -67,13 +81,16 @@ public class RatingDialogFragment extends BaseDialogFragment {
                 .setPositiveButton(R.string.rate_button_txt, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        String eventOwner = mEvent.getOrganizer().getEmailAddress().getName();
-                        EventBus.getDefault().post(new SendRatingEvent(eventOwner, buildRatingData()));
+                        final Event event = mDataStore.getEventById(mEvent.mICalUId);
+                        final RatingData ratingData = buildRatingData();
+
+                        RatingActivity ratingActivity = (RatingActivity)getActivity();
+                        ratingActivity.onSendRating(event, ratingData);
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null);
 
-        mOrganizer.setText(mEvent.getOrganizer().getEmailAddress().getName());
+        mOrganizer.setText(mEvent.mOrganizer.emailAddress.mName);
 
         final AlertDialog alertDialog = builder.create();
 
@@ -99,11 +116,11 @@ public class RatingDialogFragment extends BaseDialogFragment {
     }
 
     private RatingData buildRatingData() {
-        return new RatingData(mEvent.getICalUId(), mRatingBar.getRating(), mComments.getText().toString(), mUsername);
+        return new RatingData(mEvent.mICalUId, mRatingBar.getRating(), mComments.getText().toString(), mUsername);
     }
 
     private String buildEventTitle() {
-        return String.format("Rate %s", mEvent.getSubject());
+        return String.format("Rate %s", mEvent.mSubject);
     }
 
 }

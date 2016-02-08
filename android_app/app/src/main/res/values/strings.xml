@@ -12,25 +12,44 @@
     <string name="description_text">\nYou\'re now connected to Office 365. Tap the mail icon below to send a message from your account using the Office 365 SDK.\n</string>
     <string name="conclusion_text">\nCheck your inbox, you have a new message :)</string>
 
+    <!-- Image content description -->
+    <string name="meeting_feedback_icon_text">Meeting Feedback icon</string>
+
     <!-- Toast successful messages -->
     <string name="connect_toast_text">Connected to Office 365</string>
     <string name="send_mail_toast_text">Mail sent</string>
     <string name="disconnect_toast_text">Disconnected from Office 365</string>
 
+    <!-- Activity navigation text -->
+    <string name="name_text">Name</string>
+    <string name="email_text">Email</string>
+    <string name="sign_out_text">Sign Out</string>
+
+    <!-- Fragment rating dialog text -->
+    <string name="rate_this_meeting_text">* Rate this meeting:</string>
+    <string name="being_the_highest_text">(1 &#8211; 5, 5 being highest)</string>
+    <string name="how_to_improve_text">Comments / how to improve:</string>
+
+    <!-- Activity no network text -->
+    <string name="try_again_text">try again</string>
+
+    <!-- Fragment calendar page text -->
+    <string name="no_events_text">No Events for this Date Range were found.</string>
+
     <!-- TextView Error messages -->
     <string name="title_text_error">Oops!</string>
     <string name="connect_text_error">\nSorry, can\'t connect to Office 365.\nHint: Check logcat for details.</string>
-    <string name="sendmail_text_error">\nSorry, can\'t send the email.\nHint: Check logcat for details.</string>
+    <string name="send_mail_text_error">\nSorry, can\'t send the email.\nHint: Check logcat for details.</string>
 
     <!-- Toast error messages -->
     <string name="encryption_key_text_error">Error setting up encryption key\nCheck logcat for details</string>
     <string name="connect_toast_text_error">Error connecting to Office 365\nCheck logcat for details</string>
     <string name="send_mail_toast_text_error">Error sending email\nCheck logcat for details</string>
-    <string name="warning_clientid_redirecturi_incorrect">The client ID or redirect URI is not valid. Enter a valid client ID and redirect URI in the Constants.java file and run again</string>
+    <string name="warning_client_id_redirect_uri_incorrect">The client ID or redirect URI is not valid. Enter a valid client ID and redirect URI in the Constants.java file and run again</string>
     <string name="no_network_connection">No Network Connection found!\n
         Please ensure your device has a wifi or cellular connection.</string>
     <string name="calendar_events">Hang on a sec…</string>
-    <string name="fetchevents_failure">FetchEvents Failure</string>
+    <string name="fetch_events_failure">FetchEvents Failure</string>
     <string name="events_exception">An exception occurred while attempting to fetch the events.</string>
     <string name="calendar_events_loading">Loading your calendar events!</string>
     <string name="rate_button_txt">Rate</string>
@@ -49,7 +68,7 @@
     <string name="rating_label">Rating</string>
     <string name="meeting_details">Meeting Details</string>
     <string name="avg_rating_label">Avg Rating:</string>
-    <string name="avg_rating_text" formatted="false">Avg Rating: %.1f, of %d %s received total.</string>
+    <string name="avg_rating_text">Avg Rating: %1$.1f of %2$d %3$s received total.</string>
 
     <string-array name="meeting_filter_spinner_options">
         <item>My Meetings</item>

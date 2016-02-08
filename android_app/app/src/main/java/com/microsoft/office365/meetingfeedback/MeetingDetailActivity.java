@@ -15,25 +15,22 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.microsoft.office365.meetingfeedback.event.SendRatingEvent;
-import com.microsoft.office365.meetingfeedback.event.SendRatingSuccessEvent;
-import com.microsoft.office365.meetingfeedback.event.UserRatingAddedSuccessEvent;
-import com.microsoft.office365.meetingfeedback.event.UserRatingsLoadedSuccessEvent;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventDecorator;
+import com.microsoft.office365.meetingfeedback.model.meeting.RatingData;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingServiceResponseData;
 import com.microsoft.office365.meetingfeedback.view.RatingDialogFragment;
 import com.microsoft.office365.meetingfeedback.view.RatingsRecyclerViewAdapter;
-import com.microsoft.office365.meetingfeedback.view.ShowRatingDialogEvent;
-import com.microsoft.services.outlook.Event;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
-public class MeetingDetailActivity extends NavigationBarActivity {
+public class MeetingDetailActivity extends NavigationBarActivity implements RatingActivity {
 
     @Inject
     RatingServiceManager mRatingServiceManager;
@@ -81,7 +78,7 @@ public class MeetingDetailActivity extends NavigationBarActivity {
         mRatingHeader = (LinearLayout) findViewById(R.id.activity_meeting_detail_rating_header);
         mRatingNone = (LinearLayout) findViewById(R.id.activity_meeting_detail_rating_none);
 
-        mMeetingOrganizer.setText(mEvent.getOrganizer().getEmailAddress().getName());
+        mMeetingOrganizer.setText(mEvent.mOrganizer.emailAddress.mName);
         mActivityTitle.setText(mEventDecorator.mSubject);
         mEventDescription.setText(mEventDecorator.descriptionAsHtml());
         mMeetingDetailEventDate.setText(mEventDecorator.formattedDateAndTime());
@@ -89,7 +86,7 @@ public class MeetingDetailActivity extends NavigationBarActivity {
         mEventRatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new ShowRatingDialogEvent(mEventId));
+                RatingDialogFragment.newInstance(mEventId).show(getSupportFragmentManager(), TAG);
             }
         });
         setupRecyclerView();
@@ -98,13 +95,26 @@ public class MeetingDetailActivity extends NavigationBarActivity {
         setupRatingArea();
 
         setTitle(getString(R.string.meeting_details));
+
+        final Callback<Void> loadRatingsCallback = new Callback<Void>() {
+            @Override
+            public void success(Void aVoid, Response response) {
+                mSwipeRefreshLayout.setRefreshing(false);
+                updateUIState();
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                Log.e(TAG, error.getMessage());
+            }
+        };
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mRatingServiceManager.loadRatingFromWebservice(mEvent);
+                mRatingServiceManager.loadRatingFromWebservice(mEvent, loadRatingsCallback);
             }
         });
-        mRatingServiceManager.loadRatingFromWebservice(mEvent); //refresh the event
+        mRatingServiceManager.loadRatingFromWebservice(mEvent, loadRatingsCallback);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
@@ -123,7 +133,7 @@ public class MeetingDetailActivity extends NavigationBarActivity {
             mRatingHeader.setVisibility(View.VISIBLE);
             mRatingNone.setVisibility(View.GONE);
         } else {
-            //doesnt..
+            //doesn't...
             mMeetingRatings.setVisibility(View.GONE);
             mRatingHeader.setVisibility(View.GONE);
             mRatingNone.setVisibility(View.VISIBLE);
@@ -145,7 +155,7 @@ public class MeetingDetailActivity extends NavigationBarActivity {
 
     private void setupRatingButton() {
         //rating button
-        if (mEventDecorator.isOwner(mDataStore.getUsername())) {
+        if (mEventDecorator.mIsOrganizer) {
             mEventRatingButton.setVisibility(View.GONE);
         } else if (mEventDecorator.hasAlreadyRated()) {
             mEventRatingButton.setVisibility(View.GONE);
@@ -162,39 +172,26 @@ public class MeetingDetailActivity extends NavigationBarActivity {
         }
     }
 
-    public void onEvent(UserRatingsLoadedSuccessEvent event) {
-        mSwipeRefreshLayout.setRefreshing(false);
-        updateUIState();
-    }
-
-    public void onEvent(UserRatingAddedSuccessEvent userRatingAddedSuccessEvent) {
-        //reload the adapter since the data changed!
-        MeetingServiceResponseData webServiceRatingDataForEvent = mDataStore.getWebServiceRatingDataForEvent(mEventId);
-        mEventDecorator = new EventDecorator(mEvent, webServiceRatingDataForEvent);
-        updateUIState();
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
-
     private void updateUIState() {
         setupRatingAdapter();
         setupRatingArea();
         setupRatingButton();
     }
 
-    public void onEvent(SendRatingSuccessEvent sendRatingSuccessEvent) {
-        Log.d(TAG, "SendRatingSuccessEvent received!");
-        Toast.makeText(this, "Rating Sent!", Toast.LENGTH_SHORT).show();
-        mDialogUtil.dismissDialog(this);
+    public void onSendRating(Event event, RatingData ratingData){
+        super.sendRating(
+                event,
+                ratingData,
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        //update the webservice with data as well
+                        MeetingServiceResponseData webServiceRatingDataForEvent = mDataStore.getWebServiceRatingDataForEvent(mEventId);
+                        mEventDecorator = new EventDecorator(mEvent, webServiceRatingDataForEvent);
+                        updateUIState();
+                        mSwipeRefreshLayout.setRefreshing(false);
+                    }
+                }
+        );
     }
-
-    public void onEvent(ShowRatingDialogEvent event) {
-        RatingDialogFragment.newInstance(event.mEventId).show(getSupportFragmentManager(), RATING_DIALOG_FRAGMENT_TAG);
-    }
-
-    public void onEvent(SendRatingEvent event) {
-        mDialogUtil.showProgressDialog(this, getString(R.string.submit_rating), getString(R.string.submitting_rating_description));
-        mClientManager.getEmailClientManager().sendRating(event.mRatingData);
-    }
-
-
 }

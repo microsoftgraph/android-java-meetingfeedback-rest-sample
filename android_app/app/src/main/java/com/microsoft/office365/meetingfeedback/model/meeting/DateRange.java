@@ -4,13 +4,12 @@
  */
 package com.microsoft.office365.meetingfeedback.model.meeting;
 
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
-import com.microsoft.services.outlook.Event;
 
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 public class DateRange implements Serializable {
     public Calendar mStart;
@@ -22,7 +21,7 @@ public class DateRange implements Serializable {
     }
 
     public boolean isWithinRange(Event event) {
-        Date dateToCompare = event.getStart().getTime();
+        Date dateToCompare = FormatUtil.convertStringToDate(event.mStart.mDateTime);
         Date start = mStart.getTime();
         Date end = mEnd.getTime();
         return !(dateToCompare.after(end) || dateToCompare.before(start));
@@ -31,6 +30,6 @@ public class DateRange implements Serializable {
     public String getRangeAsFormattedString() {
         String start = FormatUtil.formatDate(mStart.getTime());
         String end = FormatUtil.formatDate(mEnd.getTime());
-        return String.format("%s - %s", end, start, Locale.US);
+        return String.format("%s - %s", end, start);
     }
 }

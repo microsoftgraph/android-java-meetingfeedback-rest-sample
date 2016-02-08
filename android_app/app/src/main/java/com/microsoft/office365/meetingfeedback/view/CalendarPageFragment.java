@@ -4,7 +4,7 @@
  */
 package com.microsoft.office365.meetingfeedback.view;
 
-import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -16,21 +16,17 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.microsoft.office365.meetingfeedback.BaseFragment;
+import com.microsoft.office365.meetingfeedback.CalendarActivity;
 import com.microsoft.office365.meetingfeedback.R;
-import com.microsoft.office365.meetingfeedback.event.RefreshCalendarDataEvent;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
-import com.microsoft.office365.meetingfeedback.model.EventFilter;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventDecorator;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
-import de.greenrobot.event.EventBus;
-
 public class CalendarPageFragment extends BaseFragment {
 
-    private static EventFilter mMeetingFilter;
     @Inject
     DataStore mDataStore;
     private RecyclerView mEventsRecyclerView;
@@ -39,7 +35,6 @@ public class CalendarPageFragment extends BaseFragment {
 
     public int mPage;
 
-    private static final String FILTER_TYPE = "FILTER_TYPE";
     public static final String PAGE_NUMBER = "PAGE_NUMBER";
     private List<EventDecorator> mEventDecorators;
 
@@ -52,8 +47,8 @@ public class CalendarPageFragment extends BaseFragment {
     }
 
     @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
+    public void onAttach(Context context) {
+        super.onAttach(context);
     }
 
     @Override
@@ -82,24 +77,20 @@ public class CalendarPageFragment extends BaseFragment {
         mEventsRecyclerView = (RecyclerView) view.findViewById(R.id.fragment_calendar_page_recyclerview);
         mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.fragment_calendar_page_swipe_refresh_layout);
         mNoEventsFoundIndicator = (TextView) view.findViewById(R.id.fragment_calendar_page_no_events_indicator);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                EventBus.getDefault().post(new RefreshCalendarDataEvent());
-            }
-        });
+        mSwipeRefreshLayout.setOnRefreshListener((CalendarActivity)getActivity());
         return view;
     }
 
     public void setupAdapter() {
-        mSwipeRefreshLayout.setVisibility(View.GONE);
-        mNoEventsFoundIndicator.setVisibility(View.VISIBLE);
         if (mEventDecorators.size() > 0) {
             mSwipeRefreshLayout.setVisibility(View.VISIBLE);
             mNoEventsFoundIndicator.setVisibility(View.GONE);
-            EventsRecyclerViewAdapter adapter = new EventsRecyclerViewAdapter(getActivity(), mDataStore, mEventDecorators);
+            EventsRecyclerViewAdapter adapter = new EventsRecyclerViewAdapter(getActivity(), mEventDecorators);
             mEventsRecyclerView.setAdapter(adapter);
             adapter.notifyDataSetChanged();
+        } else {
+            mSwipeRefreshLayout.setVisibility(View.GONE);
+            mNoEventsFoundIndicator.setVisibility(View.VISIBLE);
         }
     }
 

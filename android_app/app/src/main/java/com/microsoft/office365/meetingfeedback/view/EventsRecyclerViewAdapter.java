@@ -6,6 +6,7 @@ package com.microsoft.office365.meetingfeedback.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,23 +15,20 @@ import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.microsoft.office365.meetingfeedback.CalendarActivity;
 import com.microsoft.office365.meetingfeedback.MeetingDetailActivity;
 import com.microsoft.office365.meetingfeedback.R;
-import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventDecorator;
 
 import java.util.List;
 
-import de.greenrobot.event.EventBus;
-
 public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecyclerViewAdapter.EventsViewHolder> {
 
+    private static final String TAG = "EventsRecyclerViewAdapter";
     private final List<EventDecorator> mDisplayEvents;
-    private DataStore mDataStore;
     private Context mContext;
 
-    public EventsRecyclerViewAdapter(Context context, DataStore dataStore, List<EventDecorator> displayEvents) {
-        mDataStore = dataStore;
+    public EventsRecyclerViewAdapter(Context context, List<EventDecorator> displayEvents) {
         mContext = context;
         mDisplayEvents = displayEvents;
     }
@@ -47,7 +45,7 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
 
     @Override
     public void onBindViewHolder(EventsViewHolder eventsViewHolder, final int i) {
-        EventDecorator event = getItem(i);
+        final EventDecorator event = getItem(i);
         eventsViewHolder.mItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -64,10 +62,11 @@ public class EventsRecyclerViewAdapter extends RecyclerView.Adapter<EventsRecycl
         eventsViewHolder.mEventRatingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                EventBus.getDefault().post(new ShowRatingDialogEvent(getItem(i).mEventId));
+                FragmentManager fragmentManager = ((CalendarActivity)mContext).getSupportFragmentManager();
+                RatingDialogFragment.newInstance(event.mEventId).show(fragmentManager, TAG);
             }
         });
-        event.setupEventDisplay(mContext, mDataStore.getUsername(), eventsViewHolder);
+        event.setupEventDisplay(mContext, eventsViewHolder);
     }
 
 

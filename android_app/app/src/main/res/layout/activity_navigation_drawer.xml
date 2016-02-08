@@ -30,6 +30,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/icon"
+                android:contentDescription="@string/meeting_feedback_icon_text"
                 />
         </LinearLayout>
 
@@ -39,7 +40,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:padding="@dimen/padding_half"
-            android:text="Name"/>
+            android:text="@string/name_text"/>
 
         <TextView
             android:id="@+id/activity_navigation_drawer_email_text_view"
@@ -47,7 +48,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:padding="@dimen/padding_half"
-            android:text="Email"/>
+            android:text="@string/email_text"/>
 
         <View
             android:layout_width="match_parent"
@@ -61,7 +62,7 @@
             android:layout_width="160dp"
             android:layout_height="wrap_content"
             android:padding="@dimen/padding_half"
-            android:text="Sign Out"/>
+            android:text="@string/sign_out_text"/>
 
     </LinearLayout>
 

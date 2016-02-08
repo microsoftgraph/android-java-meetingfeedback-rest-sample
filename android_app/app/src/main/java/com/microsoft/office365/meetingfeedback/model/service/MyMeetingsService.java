@@ -12,13 +12,11 @@ import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.microsoft.office365.meetingfeedback.ConnectActivity;
+import com.microsoft.office365.meetingfeedback.MeetingDetailActivity;
 import com.microsoft.office365.meetingfeedback.MeetingFeedbackApplication;
-import com.microsoft.office365.meetingfeedback.model.Constants;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.webservice.RatingServiceManager;
 import com.microsoft.office365.meetingfeedback.util.SharedPrefsUtil;
-import com.microsoft.services.orc.resolvers.ADALDependencyResolver;
 
 import java.util.Map;
 
@@ -43,10 +41,7 @@ public class MyMeetingsService extends IntentService {
     RatingServiceManager mRatingServiceManager;
     @Inject
     SharedPrefsUtil mSharedPrefsUtil;
-    @Inject
-    ADALDependencyResolver mADALDependencyResolver;
 
-    private String mUsername;
     private Map<String, Double> mSavedMeetingResults;
     private NotificationManager mNotificationManager;
 
@@ -60,33 +55,42 @@ public class MyMeetingsService extends IntentService {
         MeetingFeedbackApplication application = (MeetingFeedbackApplication) getApplication();
         applicationGraph = application.getApplicationGraph();
         applicationGraph.inject(this);
-        mUsername = mSharedPrefsUtil.getSavedUsername();
         mSavedMeetingResults = mSharedPrefsUtil.getSavedMeetingResults();
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mADALDependencyResolver.setResourceId(Constants.OUTLOOK_RESOURCE_ID);
     }
 
     @Override
     protected void onHandleIntent(Intent intent) {
         Log.d(TAG, "Polling for new Meeting Ratings...");
-        mRatingServiceManager.loadMyMeetings(mUsername, new Callback<MyMeetingsResponse>() {
+        mRatingServiceManager.loadMyMeetings(mDataStore.getUsername(), new Callback<MyMeetingsResponse>() {
             @Override
             public void success(MyMeetingsResponse meetingResponse, Response response) {
                 Log.d(TAG, "success!");
                 //todo: compare the shared preferences version with the new version
                 Map<String, Double> newMeetingResponse = meetingResponse.toMap();
-                for (String id : newMeetingResponse.keySet()) {
+                for (final String id : newMeetingResponse.keySet()) {
                     Double savedCountForMeeting = mSavedMeetingResults.get(id);
                     Double newCountForMeeting = newMeetingResponse.get(id);
-                    //if old meeting response didnt have the key
-                    if (!mSavedMeetingResults.containsKey(id)) {
+                    //if old meeting response didn't have the key
+                    Callback<Void> loadRatingsCallback = new Callback<Void>() {
+                        @Override
+                        public void success(Void aVoid, Response response) {
+                            sendNotificationForEvent(id);
+                        }
+
+                        @Override
+                        public void failure(RetrofitError error) {
+                            Log.e(TAG, error.getMessage());
+                        }
+                    };
+                    if (!mSavedMeetingResults.containsKey(id) && newCountForMeeting > 0) {
                         Log.d(TAG, "RATING COUNT CHANGED! Send a notification for " + id + "!");
-                        sendNotificationForEvent(id);
+                        mRatingServiceManager.loadRatingFromWebservice(id, "", loadRatingsCallback);
                     }
                     if (savedCountForMeeting != null && newCountForMeeting != null
                             && !savedCountForMeeting.equals(newCountForMeeting)) {
                         Log.d(TAG, "RATING COUNT CHANGED! Send a notification for " + id + " !");
-                        sendNotificationForEvent(id);
+                        mRatingServiceManager.loadRatingFromWebservice(id, "", loadRatingsCallback);
                     }
                 }
                 mDataStore.setMyMeetings(newMeetingResponse);
@@ -94,7 +98,7 @@ public class MyMeetingsService extends IntentService {
 
             @Override
             public void failure(RetrofitError error) {
-                Log.e(TAG, "An error occured", error);
+                Log.e(TAG, "An error occurred", error);
             }
         });
     }
@@ -106,10 +110,10 @@ public class MyMeetingsService extends IntentService {
                 .setAutoCancel(true)
                 .setContentTitle("New Rating Received!")
                 .setContentText("Your meeting has received a new rating. Click to view");
-        Intent intent = new Intent(this, ConnectActivity.class);
-        intent.putExtra(EVENT_ID, id);
+        Intent intent = new Intent(this, MeetingDetailActivity.class);
+        intent.putExtra(MeetingDetailActivity.EVENT_ID_EXTRA, id);
 
-        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
         builder.setContentIntent(pIntent);
         mNotificationManager.notify(0, builder.build());
     }

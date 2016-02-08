@@ -10,10 +10,10 @@ import android.text.Spanned;
 import android.view.View;
 
 import com.microsoft.office365.meetingfeedback.R;
+import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingServiceResponseData;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 import com.microsoft.office365.meetingfeedback.view.EventsRecyclerViewAdapter;
-import com.microsoft.services.outlook.Event;
 
 import java.io.Serializable;
 import java.util.Locale;
@@ -31,15 +31,15 @@ public class EventDecorator implements Serializable {
     public final boolean mIsOrganizer;
 
     public EventDecorator(Event event, MeetingServiceResponseData serviceData) {
-        mEventId = event.getICalUId();
-        mOrganizerName = event.getOrganizer().getEmailAddress().getName();
-        mOrganizerAddress = event.getOrganizer().getEmailAddress().getAddress();
-        mSubject = event.getSubject();
-        mDescription = event.getBodyPreview();
+        mEventId = event.mICalUId;
+        mOrganizerName = event.mOrganizer.emailAddress.mName;
+        mOrganizerAddress = event.mOrganizer.emailAddress.mAddress;
+        mSubject = event.mSubject;
+        mDescription = event.mBodyPreview;
         mFormattedDate = FormatUtil.displayFormattedEventDate(event);
         mFormattedTime = FormatUtil.displayFormattedEventTime(event);
         mServiceData = serviceData;
-        mIsOrganizer = event.getIsOrganizer();
+        mIsOrganizer = event.mIsOrganizer;
     }
 
     public String formattedDateAndTime() {
@@ -65,10 +65,6 @@ public class EventDecorator implements Serializable {
         return mServiceData != null && (mServiceData.mRatings != null && mServiceData.mRatings.size() > 0);
     }
 
-    public boolean isOwner(String eventOwner) {
-        return mIsOrganizer;
-    }
-
     public int getRatingCount() {
         if (mServiceData == null || mServiceData.mRatings == null) {
             return 0;
@@ -83,7 +79,7 @@ public class EventDecorator implements Serializable {
         return 0.0f;
     }
 
-    public void setupEventDisplay(Context context, String currentUserName, EventsRecyclerViewAdapter.EventsViewHolder viewHolder) {
+    public void setupEventDisplay(Context context, EventsRecyclerViewAdapter.EventsViewHolder viewHolder) {
         viewHolder.mRatingsCount.setVisibility(View.GONE);
         if (hasRatings()) {
             viewHolder.mRatingsCount.setVisibility(View.VISIBLE);
@@ -101,7 +97,7 @@ public class EventDecorator implements Serializable {
         } else {
             viewHolder.mEventRatingButton.setVisibility(View.VISIBLE);
         }
-        if (isOwner(currentUserName)) {
+        if (mIsOrganizer) {
             viewHolder.mEventRatingButton.setVisibility(View.GONE);
         }
     }

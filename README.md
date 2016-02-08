@@ -2,7 +2,7 @@
 
 [![Meeting Feedback sample for Android](/readme-images/O365-Android-MeetingFeedback-video_play_icon.png)](http://youtu.be/VXdEtKIPxi8 "Click to see the sample in action")
 
-Meeting Feedback is an Android sample app built using the [Office 365 APIs](http://aka.ms/o365-android-connect-platformoverview). It allows users to provide anonymous feedback to the meetings that they attend. Meeting organizers can review the feedback to improve the quality of their meetings and make the best use of everyone's time. 
+Meeting Feedback uses the Office 365 endpoints in the Microsoft Graph to retrieve calendar events and send email's in behalf of the signed in user.
 
 ## Device requirements
 
@@ -72,7 +72,7 @@ The app sends an email notification to the meeting organizer when one of the mee
 	3. Find the REDIRECT\_URI constant and set its String value equal to the redirect URI you registered in Azure Active Directory.
     ![Office 365 Meeting Feedback sample](/readme-images/O365-Android-MeetingFeedback-Constants.png "Client ID and Redirect URI values in Constants file")
 
-    > Note: If you have don't have CLIENT\_ID and REDIRECT\_URI values, [add a native client application in Azure](https://msdn.microsoft.com/library/azure/dn132599.aspx#BKMK_Adding) and take note of the CLIENT\_ID and REDIRECT_URI.
+    > Note: If you have don't have CLIENT\_ID and REDIRECT\_URI values, [add a native client application in Azure](https://msdn.microsoft.com/office/office365/HowTo/add-common-consent-manually#bk_RegisterNativeApp) and take note of the CLIENT\_ID and REDIRECT_URI.
 
 Once you've built the sample, you can run it on an emulator or device.
 

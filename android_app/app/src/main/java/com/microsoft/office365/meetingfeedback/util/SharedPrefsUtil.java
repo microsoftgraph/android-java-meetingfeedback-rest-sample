@@ -17,6 +17,7 @@ public class SharedPrefsUtil {
 
     private static final String SERIALIZED_MEETINGS = "SERIALIZED_MEETINGS";
     private static final String SERIALIZED_USERNAME = "SERIALIZED_USERNAME";
+    private static final String SERIALIZED_USERID = "SERIALIZED_USERID";
     private final SharedPreferences mSharedPrefs;
     private Context mContext;
 
@@ -30,8 +31,12 @@ public class SharedPrefsUtil {
         return mSharedPrefs.getString(SERIALIZED_USERNAME, "");
     }
 
-    public void setSavedUsername(String username) {
-        mSharedPrefs.edit().putString(SERIALIZED_USERNAME, username).apply();
+    public void setSavedUserId(String userId) {
+        mSharedPrefs.edit().putString(SERIALIZED_USERID, userId).apply();
+    }
+
+    public String getSavedUserId() {
+        return mSharedPrefs.getString(SERIALIZED_USERID, "");
     }
 
     public Map<String, Double> getSavedMeetingResults() {
