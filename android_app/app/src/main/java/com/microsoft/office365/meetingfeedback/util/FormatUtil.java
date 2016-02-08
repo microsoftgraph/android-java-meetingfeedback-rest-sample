@@ -34,7 +34,7 @@ public class FormatUtil {
     }
 
     public static Date convertStringToDate(String date) {
-        SimpleDateFormat format = new SimpleDateFormat(RAW_DATE_FORMAT);
+        SimpleDateFormat format = new SimpleDateFormat(RAW_DATE_FORMAT, Locale.getDefault());
         try {
             return format.parse(date);
         } catch(ParseException pe) {
