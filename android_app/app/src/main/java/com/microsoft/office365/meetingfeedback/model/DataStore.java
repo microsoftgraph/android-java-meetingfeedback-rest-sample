@@ -88,7 +88,7 @@ public class DataStore {
     }
 
     public String getUsername() {
-        return mUser.getUsername();
+        return mUser != null ? mUser.getUsername() : null;
     }
 
     public void setMyMeetings(Map<String, Double> myMeetings) {

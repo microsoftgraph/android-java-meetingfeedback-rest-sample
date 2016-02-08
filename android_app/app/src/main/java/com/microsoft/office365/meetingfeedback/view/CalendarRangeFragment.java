@@ -86,6 +86,7 @@ public class CalendarRangeFragment extends BaseFragment {
 
     @Override
     public void onAttach(Context context) {
+        super.onAttach(context);
         mPageSettable = (PageSettable)context;
     }
 
