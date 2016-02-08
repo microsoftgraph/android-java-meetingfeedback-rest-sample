@@ -25,7 +25,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:textStyle="bold"
-        android:text="No Events for this Date Range were found."
+        android:text="@string/no_events_text"
         />
 
 </LinearLayout>

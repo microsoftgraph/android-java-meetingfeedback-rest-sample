@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
@@ -60,7 +61,15 @@ public class RatingDialogFragment extends BaseDialogFragment {
         String meetingId = getArguments().getString(MEETING_ID);
         mEvent = mDataStore.getEventById(meetingId);
         mUsername = mDataStore.getUser().getUsername();
-        View inflatedView = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_rating_dialog, null);
+
+        //Get the root ViewGroup so we can correctly inflate the view
+        final ViewGroup rootViewGroup = (ViewGroup) ((ViewGroup) this.getActivity()
+                .findViewById(android.R.id.content)).getChildAt(0);
+        View inflatedView = LayoutInflater.from(getActivity()).inflate(
+                R.layout.fragment_rating_dialog,
+                rootViewGroup,
+                false
+        );
 
         mOrganizer = (TextView) inflatedView.findViewById(R.id.fragment_rating_organizer_name);
         mComments = (EditText) inflatedView.findViewById(R.id.fragment_rating_comments);
@@ -76,7 +85,7 @@ public class RatingDialogFragment extends BaseDialogFragment {
                         final RatingData ratingData = buildRatingData();
 
                         RatingActivity ratingActivity = (RatingActivity)getActivity();
-                        ratingActivity.sendRating(event, ratingData);
+                        ratingActivity.onSendRating(event, ratingData);
                     }
                 })
                 .setNegativeButton(android.R.string.cancel, null);

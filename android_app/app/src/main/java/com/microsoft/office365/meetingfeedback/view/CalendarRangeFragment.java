@@ -4,6 +4,7 @@
  */
 package com.microsoft.office365.meetingfeedback.view;
 
+import android.content.Context;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.widget.TextView;
 
 import com.microsoft.office365.meetingfeedback.BaseFragment;
 import com.microsoft.office365.meetingfeedback.CalendarActivity;
+import com.microsoft.office365.meetingfeedback.PageSettable;
 import com.microsoft.office365.meetingfeedback.R;
 import com.microsoft.office365.meetingfeedback.model.DataStore;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventGroup;
@@ -36,6 +38,7 @@ public class CalendarRangeFragment extends BaseFragment {
     private TextView mRangeFour;
     private List<TextView> mRanges;
     private int mActivePage;
+    private PageSettable mPageSettable;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -74,12 +77,16 @@ public class CalendarRangeFragment extends BaseFragment {
                 @Override
                 public void onClick(View v) {
                     setActivePage(page);
-                    CalendarActivity calendarActivity = (CalendarActivity)getActivity();
-                    calendarActivity.setPage(page);
+                    mPageSettable.onPageSet(page);
                 }
             });
         }
         setActivePage(mActivePage);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        mPageSettable = (PageSettable)context;
     }
 
     public void setActivePage(int i) {

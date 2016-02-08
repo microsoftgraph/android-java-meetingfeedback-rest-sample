@@ -8,5 +8,5 @@ import com.microsoft.office365.meetingfeedback.model.meeting.RatingData;
 import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 
 public interface RatingActivity {
-    void sendRating(Event event, RatingData ratingData);
+    void onSendRating(Event event, RatingData ratingData);
 }

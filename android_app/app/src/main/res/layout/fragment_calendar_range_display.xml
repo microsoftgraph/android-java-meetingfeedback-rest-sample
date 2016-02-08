@@ -14,7 +14,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:id="@+id/range_one"
-        android:text="FOOBAR"
         style="@style/calendar_range_inactive_style"
         />
 
@@ -23,7 +22,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:id="@+id/range_two"
-        android:text="FOOBAR"
         style="@style/calendar_range_inactive_style"
         />
 
@@ -31,7 +29,6 @@
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:text="FOOBAR"
         android:id="@+id/range_three"
         style="@style/calendar_range_inactive_style"
         />
@@ -41,7 +38,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:id="@+id/range_four"
-        android:text="FOOBAR"
         style="@style/calendar_range_inactive_style"
         />
 

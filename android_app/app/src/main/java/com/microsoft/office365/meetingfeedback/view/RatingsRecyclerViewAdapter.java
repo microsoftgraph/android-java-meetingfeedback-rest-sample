@@ -16,8 +16,11 @@ import com.microsoft.office365.meetingfeedback.R;
 import com.microsoft.office365.meetingfeedback.model.meeting.RatingData;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingServiceResponseData;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class RatingsRecyclerViewAdapter extends RecyclerView.Adapter<RatingsRecyclerViewAdapter.RatingsViewHolder> {
 
@@ -51,7 +54,8 @@ public class RatingsRecyclerViewAdapter extends RecyclerView.Adapter<RatingsRecy
     public void onBindViewHolder(RatingsViewHolder holder, int position) {
         RatingData item = getItem(position);
         holder.mRatingBar.setRating(item.mRating);
-        holder.mRatingValue.setText(item.mRating + "");
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        holder.mRatingValue.setText(decimalFormat.format(item.mRating));
         holder.mRatingComments.setText(item.getCommentString());
     }
 
