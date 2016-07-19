@@ -74,6 +74,13 @@ The app sends an email notification to the meeting organizer when one of the mee
 
 Once you've built the sample, you can run it on an emulator or device.
 
+<a name="contributing"></a>
+## Contributing ##
+
+If you'd like to contribute to this sample, see [CONTRIBUTING.MD](/CONTRIBUTING.md).
+
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+
 ## Questions and comments
 
 We'd love to get your comments about the Office 365 Meeting Feedback sample. You can send your questions and suggestions to us in the [Issues](https://github.com/OfficeDev/O365-Android-Connect/issues) section of this repository.
