@@ -37,6 +37,9 @@ public class RESTHelper {
                 try {
                     AuthenticationResult authenticationResult = (AuthenticationResult)mAuthenticationManager.authenticateSilent(null).get();
                     request.addHeader("Authorization", "Bearer " + authenticationResult.getAccessToken());
+                    // This header has been added to identify this sample in the Microsoft Graph service.
+                    // If you're using this code for your project please remove the following line.
+                    request.addHeader("SampleID", "android-java-meetingfeedback-rest-sample");
                 } catch (InterruptedException | ExecutionException e) {
                     Log.e(TAG, e.getMessage());
                 }
