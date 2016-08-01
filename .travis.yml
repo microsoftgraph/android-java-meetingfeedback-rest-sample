@@ -7,7 +7,7 @@ android:
   - android-23
   - build-tools-23.0.2
 script:
-- gradle clean build -p android_app/app/
+- ./gradlew clean build -p android_app/app/
 notifications:
   slack:
     secure: baYp2E1zWyGfFMD/7yhrKi9XNy28ryL4dnTybNouOXcoEPy8f+XDD/AkavZ2BqPK+w1407OhgIzB0lkQqcKErUN9Vl1x6tixdmc42Wb4uZ7tle6u2EDuOud8Rl8rOeMQCXz03J8F2RtdkbUZJuPkp40jbpw3Og9RPqIs7wEQAEoeqtjquZD94xwwK7WG+2plZqFm6zUqpl4wWXjSSY0cnqDj0xQjG5A6d2OLNj7z4Kp/MODMavJtfhqUyNnCML21GLlUkE3D67A1n36Jc7bNuNTaoho0D2vxmJftW3RinLS6HW0HdR+vH9+acvuB4t4cc6NejYaJiVXS9HTfD//uexxCHTPUOSmL6KPC3xzIHU/BnPwona/jZLwYk3enPp0UyNKi+bzBKaaGgUl0pnnWYbou+uDxpQdDB1KIQDdWGk90ykwSklHqUHkvCrUiAnDUbR1OqksDiOfVTSySQMIMVHaUJSTmL5HjYrYCAtyUOY+gSVZ85WjLJjjZp3d3dh+3ZUvQZLUUFNe2E3FZ4BORpeYLD8sKPeH/RTmXYnvjnHhGpDsJAg/tk4dEWjNKkVRfMpy8UydJ/OGkajnOy01kedzI7MeAhPy/uQtTQ1sDxU5qwWWJOOQrVc/+/WLAIIyAwglfmasIK0q6OqYjve7QPhjXh2kYR4kHRO6NlU6WUNs=
