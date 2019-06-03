@@ -4,8 +4,8 @@
  */
 package com.microsoft.office365.meetingfeedback.model;
 
+import com.microsoft.graph.models.extensions.Event;
 import com.microsoft.office365.meetingfeedback.model.meeting.EventGroup;
-import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingServiceResponseData;
 import com.microsoft.office365.meetingfeedback.util.CalendarUtil;
 import com.microsoft.office365.meetingfeedback.util.SharedPrefsUtil;
@@ -58,7 +58,7 @@ public class DataStore {
     public void setEvents(List<Event> events) {
         mEvents = events;
         for (Event event : events) {
-            mEventsMap.put(event.mICalUId, event);
+            mEventsMap.put(event.iCalUId, event);
         }
     }
 
@@ -106,8 +106,8 @@ public class DataStore {
     public List<Event> getFilteredEvents() {
         List<Event> filteredEvents = new ArrayList<>();
         for (Event event : getEvents()) {
-            boolean condition = event.mIsOrganizer;
-            condition = mFilter.equals(EventFilter.MY_MEETINGS) ? condition : !condition;
+            boolean condition = event.isOrganizer;
+            condition = mFilter.equals(EventFilter.MY_MEETINGS) == condition;
             if (condition) {
                 filteredEvents.add(event);
             }

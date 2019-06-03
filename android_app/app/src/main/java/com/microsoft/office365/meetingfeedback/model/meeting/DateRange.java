@@ -4,7 +4,7 @@
  */
 package com.microsoft.office365.meetingfeedback.model.meeting;
 
-import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
+import com.microsoft.graph.models.extensions.Event;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 
 import java.io.Serializable;
@@ -21,7 +21,7 @@ public class DateRange implements Serializable {
     }
 
     public boolean isWithinRange(Event event) {
-        Date dateToCompare = FormatUtil.convertStringToDate(event.mStart.mDateTime);
+        Date dateToCompare = FormatUtil.convertStringToDate(event.start.dateTime);
         Date start = mStart.getTime();
         Date end = mEnd.getTime();
         return !(dateToCompare.after(end) || dateToCompare.before(start));

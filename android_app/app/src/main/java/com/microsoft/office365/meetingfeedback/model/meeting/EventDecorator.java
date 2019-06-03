@@ -9,8 +9,8 @@ import android.text.Html;
 import android.text.Spanned;
 import android.view.View;
 
+import com.microsoft.graph.models.extensions.Event;
 import com.microsoft.office365.meetingfeedback.R;
-import com.microsoft.office365.meetingfeedback.model.outlook.payload.Event;
 import com.microsoft.office365.meetingfeedback.model.webservice.payload.MeetingServiceResponseData;
 import com.microsoft.office365.meetingfeedback.util.FormatUtil;
 import com.microsoft.office365.meetingfeedback.view.EventsRecyclerViewAdapter;
@@ -31,15 +31,15 @@ public class EventDecorator implements Serializable {
     public final boolean mIsOrganizer;
 
     public EventDecorator(Event event, MeetingServiceResponseData serviceData) {
-        mEventId = event.mICalUId;
-        mOrganizerName = event.mOrganizer.emailAddress.mName;
-        mOrganizerAddress = event.mOrganizer.emailAddress.mAddress;
-        mSubject = event.mSubject;
-        mDescription = event.mBodyPreview;
+        mEventId = event.iCalUId;
+        mOrganizerName = event.organizer.emailAddress.name;
+        mOrganizerAddress = event.organizer.emailAddress.address;
+        mSubject = event.subject;
+        mDescription = event.bodyPreview;
         mFormattedDate = FormatUtil.displayFormattedEventDate(event);
         mFormattedTime = FormatUtil.displayFormattedEventTime(event);
         mServiceData = serviceData;
-        mIsOrganizer = event.mIsOrganizer;
+        mIsOrganizer = event.isOrganizer;
     }
 
     public String formattedDateAndTime() {
