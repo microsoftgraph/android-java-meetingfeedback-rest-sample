@@ -1,3 +1,24 @@
+---
+page_type: sample
+products:
+- office-outlook
+- office-365
+- ms-graph
+languages:
+- java
+extensions:
+  contentType: samples
+  technologies:
+  - Microsoft Graph
+  services:
+  - Outlook
+  - Office 365
+  platforms:
+  - Android
+  createdDate: 7/8/2015 4:17:48 PM
+  scenarios:
+  - Mobile
+---
 # Office 365 Meeting Feedback sample for Android
 
 [![Build Status](https://travis-ci.org/microsoftgraph/nodejs-webhooks-rest-sample.svg)](https://travis-ci.org/microsoftgraph/nodejs-webhooks-rest-sample)
